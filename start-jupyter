@@ -1,0 +1,44 @@
+#!/bin/bash
+
+## environment
+ENVSM=base
+
+FLAG=0
+
+while getopts c: option
+do
+    case "${option}"
+    in
+        c) COURSE=${OPTARG};;
+        \?) ## Invalid option
+            printf "Error: invalid option.\n\n"
+            exit;;
+    esac
+done
+
+
+if [[ "${COURSE}" == "NGS Summer" ]]
+then
+    echo "Chosen course: NGS summer school"
+	ln -s /usr/NGS_summer_course/ /work/NGS_summer_course/
+
+fi
+
+#if [ -f "${BATCH_SCRIPT}" ]
+#then
+#
+#    printf  "\n=====================  "
+#    printf  "\n Submit batch script  \n"
+#    printf  "=====================  \n\n"
+#
+#    bash "${BATCH_SCRIPT}"
+#    exit 0
+#
+#fi
+
+printf  "\n==================  "
+printf  "\n Start JupyterLab  \n"
+printf  "==================  \n\n"
+
+bash -c "jupyter lab --NotebookApp.token='' "
+
