@@ -5,6 +5,14 @@ ENVSM=base
 
 FLAG=0
 
+###########
+#options:
+#
+# c = a drop-down menu with the following course course names
+#     1) Intro to NGS data
+#
+
+
 while getopts c: option
 do
     case "${option}"
@@ -16,25 +24,32 @@ do
     esac
 done
 
+printf  "\n==================  "
+printf  "\n Selecting Course  \n"
+printf  "==================  \n\n"
 
-if [[ "${COURSE}" == "NGS Summer" ]]
+if [ "${COURSE}" == "Intro to NGS data" ]
 then
-    echo "Chosen course: NGS summer school"
-	ln -s /usr/NGS_summer_course/ /work/NGS_summer_course/
+    echo "-----> Chosen course: Introduction to NGS data"
+    #check if a folder called "Intro_to_NGS" has been chosen prior to job submission
+	if [ ! -d "Intro_to_NGS" ]; 
+    then
+        echo "-----> Linking fresh course material"
+        ln -s /usr/Intro_to_NGS /work/Intro_to_NGS
+    else
+        echo "-----> Using your own course material"
+    fi
+
+    #install kernels - this goes into start-jupyter
+    echo "-----> Installing course kernels on jupyterlab"
+    ${CONDA_DIR}/envs/NGS_aarhus_py/bin/python -m ipykernel install --user --name="NGS_python" --display-name "NGS (python)" && \
+    ${CONDA_DIR}/envs/NGS_aarhus_r/bin/R -e "IRkernel::installspec(user=TRUE, name = 'NGS_R', displayname = 'NGS (R)')"
+
+    ### modify kernel files with system variables
+    cp /usr/Intro_to_NGS/Environments/kernel_py_docker.json ~/.local/share/jupyter/kernels/ngs_python/kernel.json && \
+    cp /usr/Intro_to_NGS/Environments/kernel_R_docker.json ~/.local/share/jupyter/kernels/ngs_r/kernel.json
 
 fi
-
-#if [ -f "${BATCH_SCRIPT}" ]
-#then
-#
-#    printf  "\n=====================  "
-#    printf  "\n Submit batch script  \n"
-#    printf  "=====================  \n\n"
-#
-#    bash "${BATCH_SCRIPT}"
-#    exit 0
-#
-#fi
 
 printf  "\n==================  "
 printf  "\n Start JupyterLab  \n"
