@@ -87,6 +87,7 @@ RUN mamba env create -p "${CONDA_DIR}/envs/NGS_aarhus_py" -f /usr/Intro_to_NGS/E
 ## Set startup script in the PATH
 COPY --chown=${NB_USER}:${NB_GID} start-jupyter ${CONDA_DIR}/bin/
 RUN chmod +x ${CONDA_DIR}/bin/start-jupyter
+RUN chown -R ${NB_USER}:${NB_GID} /usr/Intro_to_NGS
 #COPY --chown=${NB_USER}:${NB_GID} start-jupyter ${CONDA_DIR}/bin/
 #RUN sed -i -e 's/\r$//' ${CONDA_DIR}/bin/start-jupyter \
 # && chmod +x ${CONDA_DIR}/bin/start-jupyter

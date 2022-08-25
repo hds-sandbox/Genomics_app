@@ -48,7 +48,6 @@ then
     ### modify kernel files with system variables
     cp /usr/Intro_to_NGS/Environments/kernel_py_docker.json ~/.local/share/jupyter/kernels/ngs_python/kernel.json && \
     cp /usr/Intro_to_NGS/Environments/kernel_R_docker.json ~/.local/share/jupyter/kernels/ngs_r/kernel.json
-
 fi
 
 printf  "\n==================  "
