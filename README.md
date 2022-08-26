@@ -1,8 +1,10 @@
-# Genomics courses
+# Genomics sandbox
 
-In this app you will find material for the genomics courses of the [Health Data Science sandbox](https://hds-sandbox.github.io). Each course is composed of jupyter notebooks that run in jupyterlab. JupyterLab is a web-based integrated development environment for Jupyter notebooks, code, and data.
+In this app you will find material for the genomics sandbox of the [Health Data Science sandbox](https://hds-sandbox.github.io). This contains courses you can larn from, datasets and tools you can work with for your own research/learning purposes. Each item of this sandbox is based on jupyterlab. JupyterLab is a web-based integrated development environment for Jupyter notebooks, code, and data. Usually, each item includes a dedicated webpage with additional informations, guides, and material.
 
-## Available courses
+## Available items
+
+### Courses
 
 Courses are periodically added to this app. Each course comes with all necessary packages installed, notebooks with computer code and explanations, and a dedicated webpage with additional material (notes, slides, recordings, ...). The available courses are
 

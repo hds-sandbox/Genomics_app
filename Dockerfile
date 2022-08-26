@@ -7,7 +7,7 @@ LABEL software="Genomics Courses" \
       author="Samuele Soraggi" \
       version="v2022.08.01" \
       license="MIT" \
-      description="Genomics courses"
+      description="Genomics sandbox"
 
 
 USER 0
@@ -75,14 +75,7 @@ RUN mamba env create -p "${CONDA_DIR}/envs/NGS_aarhus_py" -f /usr/Intro_to_NGS/E
     mamba env create -p "${CONDA_DIR}/envs/NGS_aarhus_r" -f /usr/Intro_to_NGS/Environments/R_environment.yml && \
     mamba clean --all -f -y && \
     rm -rf 
-#install kernels - this goes into start-jupyter
-#RUN "${CONDA_DIR}/envs/NGS_aarhus_py/bin/python" -m ipykernel install --user --name="NGS_python" --display-name "NGS (python)" && \
-#    /opt/conda/envs/NGS_aarhus_r/bin/R -e "IRkernel::installspec(user=TRUE, name = 'NGS_R', displayname = 'NGS (R)')" && \
-#    fix-permissions "${CONDA_DIR}" && \
-#    fix-permissions "/home/${NB_USER}"
-### modify kernel files with system variables
-#RUN cp ./Course_Material/Environments/kernel_py_docker.json ~/.local/share/jupyter/kernels/ngs_python/kernel.json && \
-#    cp ./Course_Material/Environments/kernel_R_docker.json ~/.local/share/jupyter/kernels/ngs_r/kernel.json
+    
 
 ## Set startup script in the PATH
 COPY --chown=${NB_USER}:${NB_GID} start-jupyter ${CONDA_DIR}/bin/
