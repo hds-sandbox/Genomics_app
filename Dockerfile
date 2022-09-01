@@ -1,17 +1,47 @@
 FROM dreg.cloud.sdu.dk/ucloud-apps/jupyter-base:3.4.2
-# dreg.cloud.sdu.dk/ucloud-apps/jupyter-all-spark:3.4.2
 
 MAINTAINER "Samuele Soraggi <samuele@birc.au.dk>"
 
-LABEL software="Genomics Courses" \
+LABEL software="Genomics Sandbox" \
       author="Samuele Soraggi" \
-      version="v2022.08.01" \
+      version="2022.08.01" \
       license="MIT" \
-      description="Genomics sandbox"
-
+      description="Courses, datasets and software tools for genomics analysis"
 
 USER 0
 
+############# Intro to NGS (Aarhus summer course) - release 2022.08.01
+RUN mkdir -p /usr/Intro_to_NGS \
+ && chown -R "${NB_USER}":"${NB_GID}" /usr/Intro_to_NGS
+
+USER 11042
+
+WORKDIR /usr/Intro_to_NGS
+
+RUN git init \
+ && git remote add origin https://github.com/hds-sandbox/NGS_summer_course_Aarhus.git \
+ && git config core.sparseCheckout true \
+ && echo "Environments/" >> .git/info/sparse-checkout \
+ && echo "Notebooks/" >> .git/info/sparse-checkout \
+ && echo "Scripts/" >> .git/info/sparse-checkout \
+ && git pull --depth=1 origin main \
+ ## Data download
+ && mkdir -p /usr/Intro_to_NGS/Data \
+ && curl https://zenodo.org/record/6952995/files/clover.tar.gz?download=1 -o /usr/Intro_to_NGS/Data/Clover_Data.tar.gz \
+ && tar -zxvf /usr/Intro_to_NGS/Data/Clover_Data.tar.gz -C /usr/Intro_to_NGS/Data/ \
+ && curl https://zenodo.org/record/6952995/files/singlecell.tar.gz?download=1 -o /usr/Intro_to_NGS/Data/scrna_Data.tar.gz \
+ && tar -zxvf /usr/Intro_to_NGS/Data/scrna_Data.tar.gz -C /usr/Intro_to_NGS/Data/ \
+ && rm -f /usr/Intro_to_NGS/Data/*.tar.gz \
+ ## Create environments
+ && mamba env create -p "${CONDA_DIR}/envs/NGS_aarhus_py" -f /usr/Intro_to_NGS/Environments/python_environment.yml \
+ && mamba env create -p "${CONDA_DIR}/envs/NGS_aarhus_r" -f /usr/Intro_to_NGS/Environments/R_environment.yml \
+ && mamba clean --all -f -y \
+ && fix-permissions "/home/${NB_USER}" \
+ && fix-permissions "${CONDA_DIR}"
+
+WORKDIR /work
+
+## Add JupyterLab Extensions
 RUN printf "Install JupyterLab extensions:" \
  && pip install --no-cache-dir "nteract-on-jupyter" \
  && jupyter labextension install "jupyter-threejs" \
@@ -46,45 +76,9 @@ RUN printf "Install JupyterLab extensions:" \
  ## add Plotly extension
  && pip install --no-cache-dir  "plotly" \
  && jupyter labextension install "jupyterlab-plotly" \
- && fix-permissions "/home/${NB_USER}"  
-
-RUN fix-permissions "${CONDA_DIR}" && \
-    fix-permissions "/home/${NB_USER}"
-
-
-############# Intro to NGS (Aarhus summer course) - release 2022.08.01
-RUN mkdir -p /usr/Intro_to_NGS
-RUN fix-permissions "/usr/Intro_to_NGS"
-WORKDIR /usr/Intro_to_NGS
-RUN git init && \
-      git remote add origin https://github.com/hds-sandbox/NGS_summer_course_Aarhus.git && \
-      git config core.sparseCheckout true && \
-      echo "Environments/" >> .git/info/sparse-checkout && \
-      echo "Notebooks/" >> .git/info/sparse-checkout && \
-      echo "Scripts/" >> .git/info/sparse-checkout && \
-      git pull --depth=1 origin main
-###data download
-RUN mkdir -p /usr/Intro_to_NGS/Data && \
-    curl https://zenodo.org/record/6952995/files/clover.tar.gz?download=1 -o /usr/Intro_to_NGS/Data/Clover_Data.tar.gz && \
-    tar -zxvf /usr/Intro_to_NGS/Data/Clover_Data.tar.gz -C /usr/Intro_to_NGS/Data/
-RUN curl https://zenodo.org/record/6952995/files/singlecell.tar.gz?download=1 -o /usr/Intro_to_NGS/Data/scrna_Data.tar.gz && \
-    tar -zxvf /usr/Intro_to_NGS/Data/scrna_Data.tar.gz -C /usr/Intro_to_NGS/Data/ && \
-    rm -f /usr/Intro_to_NGS/Data/*.tar.gz
-#create environments
-RUN mamba env create -p "${CONDA_DIR}/envs/NGS_aarhus_py" -f /usr/Intro_to_NGS/Environments/python_environment.yml && \
-    mamba env create -p "${CONDA_DIR}/envs/NGS_aarhus_r" -f /usr/Intro_to_NGS/Environments/R_environment.yml && \
-    mamba clean --all -f -y && \
-    rm -rf 
-    
+ && fix-permissions "/home/${NB_USER}" \
+ && fix-permissions "${CONDA_DIR}"
 
 ## Set startup script in the PATH
-COPY --chown=${NB_USER}:${NB_GID} start-jupyter ${CONDA_DIR}/bin/
-RUN chmod +x ${CONDA_DIR}/bin/start-jupyter
-RUN chown -R ${NB_USER}:${NB_GID} /usr/Intro_to_NGS
-#COPY --chown=${NB_USER}:${NB_GID} start-jupyter ${CONDA_DIR}/bin/
-#RUN sed -i -e 's/\r$//' ${CONDA_DIR}/bin/start-jupyter \
-# && chmod +x ${CONDA_DIR}/bin/start-jupyter
-
-WORKDIR /work
-
-USER 11042
+COPY --chown="${NB_USER}":"${NB_GID}" start-jupyter "${CONDA_DIR}"/bin/
+RUN chmod +x "${CONDA_DIR}"/bin/start-jupyter
