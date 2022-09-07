@@ -41,4 +41,4 @@ printf  "\n==================  "
 printf  "\n Start JupyterLab  \n"
 printf  "==================  \n\n"
 #add course name as variable to be used
-bash -c "COURSE=$COURSE jupyter lab --NotebookApp.token='' "
+bash -c "COURSE=${COURSE} jupyter lab --NotebookApp.token='' "
