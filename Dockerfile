@@ -44,11 +44,11 @@ WORKDIR /work
 ## Add JupyterLab Extensions
 RUN printf "Install JupyterLab extensions:" \
  && pip install --no-cache-dir "nteract-on-jupyter" \
- && jupyter labextension install "jupyter-threejs" \
- && jupyter labextension install "ipyvolume" \
+ #&& jupyter labextension install "jupyter-threejs" \
+ #&& jupyter labextension install "ipyvolume" \
  && jupyter lab clean -y \
  ## add support for LaTeX docs
- && pip install --no-cache-dir "jupyterlab-latex" \
+ #&& pip install --no-cache-dir "jupyterlab-latex" \
  ## open spreadsheets such as Excel and OpenOffice
  && jupyter labextension install "jupyterlab-spreadsheet" \
  && jupyter lab clean -y \
@@ -59,7 +59,7 @@ RUN printf "Install JupyterLab extensions:" \
  ## add system monitor
  && pip install --no-cache-dir "jupyterlab-system-monitor" \
  ## add theme toggle bottom
- && jupyter labextension install "jupyterlab-theme-toggle" \
+ #&& jupyter labextension install "jupyterlab-theme-toggle" \
  && jupyter lab clean -y \
  ## add code formatter
  && pip install --no-cache-dir "autopep8" "yapf" "isort" "black" \
@@ -72,7 +72,7 @@ RUN printf "Install JupyterLab extensions:" \
  ## add nbdime
  && pip install --no-cache-dir "nbdime" \
  ## add Bokeh extension
- && pip install --no-cache-dir "jupyter_bokeh" \
+ #&& pip install --no-cache-dir "jupyter_bokeh" \
  ## add Plotly extension
  && pip install --no-cache-dir  "plotly" \
  && jupyter labextension install "jupyterlab-plotly" \

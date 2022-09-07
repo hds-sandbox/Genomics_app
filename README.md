@@ -14,14 +14,30 @@ Items are periodically added to this app and can be chosen from the menu. Each i
 | :-----------: | ----------- | ----------- | ----------- |
 | **Introduction to NGS data analysis**  | <div style="text-align: justify"> A one-week course to introduce NGS data, from data alignment to bioinformatics analysis </div> | [Webpage](https://hds-sandbox.github.io/NGS_summer_course_Aarhus/) | Python, R, bash |
 
+## Copying folders from your session
+
+If you want to get some of the material you have been working on using the app, you have two possibilities.
+
+### Download only your code
+
+You can always download specific jupyter notebooks from jupyterlab. Simply right-click on a notebook, and choose `Download`. Upload the notebooks again in a future session of the app to work on them again. Note that all your **outputs from the code are lost**, so you must rerun your notebooks.
+
+### Download code, data and results
+
+You can copy the whole folder containing code, results and data.
+The downloaded course material can be found into the folder `Jobs/Genomics Sandbox/$JOB_ID` under your personal user files, where `$JOB_ID` is the folder related to the session. To download all the material, you have to follow these steps while you are in jupyterlab:
+
+* Open a new terminal using `File --> New --> Terminal`
+  ![](./docs_img/menu.png)
+* Write the command `bash ./$COURSE/Scripts/copyMaterial.sh`. You will be asked to confirm if you want to copy the data. **Check if that amount of data actually fits into your storage space on `uCloud` before accepting.**
+* If you execute the copy, you receive a confirmation message with the folder where you can find the data.
+![](./docs_img/run.png)
+
+
 ## Additional options
 
 Before submitting the app, you can choose a course and the amount of resources you need. Additionally, you can add folders so that they will be visible when using jupyterlab. Adding folders is useful if
 
-- you want to use a folder containing **your own data and code**, with which you want to perform analysis with the course tools
-- you want to continue working on the course material **from a  previous session** of a course. In such a case, add the folder containing the material using the option `Add folder`. This can be found into the folder `Jobs` under your personal user files. The folder must have the original name it was given when running the previous session (for example, the course material for *Introduction to NGS data analysis* is in a folder called *Intro_to_NGS* created when you start the app).
-
-> Hint: 
-> 
-> You can always download specific jupyter notebooks from jupyterlab, and upload them again in a future session. In this way, you will also be able to continue working on the same notebooks, but note that you might need to generate again the necessary output files in your analysis.
+- you want to use a folder containing **your own data and code**, with which you want to perform analysis with the Genomics tools of a course/module
+- you want to continue working on the material **from a  previous session** of the Genomics Sandbox. In such a case, add the folder containing the material using the option `Add folder`. 
 
