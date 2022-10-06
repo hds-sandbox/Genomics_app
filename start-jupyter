@@ -35,10 +35,20 @@ then
     cp /usr/Intro_to_NGS/Environments/kernel_py_docker.json ~/.local/share/jupyter/kernels/ngs_python/kernel.json && \
     cp /usr/Intro_to_NGS/Environments/kernel_R_docker.json ~/.local/share/jupyter/kernels/ngs_r/kernel.json
     
+    printf  "\n==================  "
+    printf  "\n Start JupyterLab  \n"
+    printf  "==================  \n\n"
+    #add course name as variable to be used
+    bash -c "COURSE=${COURSE} jupyter lab --NotebookApp.token='' "
+
 fi
 
-printf  "\n==================  "
-printf  "\n Start JupyterLab  \n"
-printf  "==================  \n\n"
-#add course name as variable to be used
-bash -c "COURSE=${COURSE} jupyter lab --NotebookApp.token='' "
+if [ "${COURSE}" == "IGV Genomic Browser" ]
+then
+    echo "-----> Chosen tool: Interactive Genomic Browser"
+    cd /usr/igv-webapp
+    npx http-server --port 8787 -a 0.0.0.0 dist
+    
+fi
+
+

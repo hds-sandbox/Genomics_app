@@ -4,7 +4,7 @@ In this app you will find material for the genomics sandbox of the **[Health Dat
 
 ## Available items
 
-Items are periodically added to this app and can be chosen from the menu. Each item can be a course, a setup to work with specific softwares, a research example and comes with all necessary packages installed, eventual notebooks with computer code and explanations, and a dedicated webpage with additional material (notes, slides, recordings, ...).
+Items are periodically added to this app and can be chosen from the menu. Each item can be for example a course, a setup to work with specific softwares, a research example and comes with all necessary packages installed, eventual notebooks with computer code and explanations, and a dedicated webpage with additional material (notes, slides, recordings, ...).
 
 ### Courses
 
@@ -14,7 +14,15 @@ Items are periodically added to this app and can be chosen from the menu. Each i
 | :-----------: | ----------- | ----------- | ----------- |
 | **Introduction to NGS data analysis**  | <div style="text-align: justify"> A one-week course to introduce NGS data, from data alignment to bioinformatics analysis </div> | [Webpage](https://hds-sandbox.github.io/NGS_summer_course_Aarhus/) | Python, R, bash |
 
-## Copying folders from your session
+### Tools
+
+ The available tools are
+
+| Tool name      | Description |  Links    | Programming language |
+| :-----------: | ----------- | ----------- | ----------- |
+| **IGV - Integrative Genomics viewer**  | <div style="text-align: justify"> A High-performance, easy-to-use, interactive tool for the visual exploration of genomic data. It supports flexible integration of all the common types of genomic data and metadata, investigator-generated or publicly available. </div> | [Official Manual](https://igvteam.github.io/igv-webapp/) | Interactive User Interface |
+
+## Copying folders from a course session
 
 If you want to get some of the material you have been working on using the app, you have two possibilities.
 

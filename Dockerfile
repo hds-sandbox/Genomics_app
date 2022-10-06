@@ -79,6 +79,21 @@ RUN printf "Install JupyterLab extensions:" \
  && fix-permissions "/home/${NB_USER}" \
  && fix-permissions "${CONDA_DIR}"
 
+USER 0
+
+## setup IGV browser
+RUN npm install --global http-server \
+ && git clone https://github.com/igvteam/igv-webapp.git /usr/igv-webapp \
+ && fix-permissions /usr/igv-webapp
+
+WORKDIR /usr/igv-webapp
+
+RUN npm install \
+ && npm run build
+
+USER 11042
+WORKDIR /work
+
 ## Set startup script in the PATH
 COPY --chown="${NB_USER}":"${NB_GID}" start-jupyter "${CONDA_DIR}"/bin/
 RUN chmod +x "${CONDA_DIR}"/bin/start-jupyter
