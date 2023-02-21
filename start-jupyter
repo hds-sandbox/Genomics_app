@@ -11,6 +11,10 @@ do
     esac
 done
 
+COURSE_DIR=/work/Material/
+mkdir -p ${COURSE_DIR}
+fix-permissions ${COURSE_DIR}
+
 printf  "\n==================  "
 printf  "\n Selecting Course  \n"
 printf  "==================  \n\n"
@@ -20,35 +24,103 @@ then
     echo "-----> Chosen course: Introduction to NGS data"
     if [ ! -d "Intro_to_NGS" ];
     then
-        echo "-----> Linking fresh course material."
-        ln -s /usr/Intro_to_NGS /work/Intro_to_NGS
+        echo "-----> Using your own course material."
+        #mkdir -p /usr/Intro_to_NGS \
+        # && chown -R "${NB_USER}":"${NB_GID}" /usr/Intro_to_NGS
+        #git remote add origin v2022.08.01 https://github.com/hds-sandbox/NGS_summer_course_Aarhus.git \
+        #&& git config core.sparseCheckout true \
+        #&& echo "Environments/" >> .git/info/sparse-checkout \
+        #&& echo "Notebooks/" >> .git/info/sparse-checkout \
+        #&& echo "Scripts/" >> .git/info/sparse-checkout \
+        #&& git pull --depth=1 origin main \
+        ## Data download
+        #&& mkdir -p /usr/Intro_to_NGS/Data \
+        #&& curl https://zenodo.org/record/6952995/files/clover.tar.gz?download=1 -o /usr/Intro_to_NGS/Data/Clover_Data.tar.gz \
+        #&& tar -zxvf /usr/Intro_to_NGS/Data/Clover_Data.tar.gz -C /usr/Intro_to_NGS/Data/ \
+        #&& curl https://zenodo.org/record/6952995/files/singlecell.tar.gz?download=1 -o /usr/Intro_to_NGS/Data/scrna_Data.tar.gz \
+        #&& tar -zxvf /usr/Intro_to_NGS/Data/scrna_Data.tar.gz -C /usr/Intro_to_NGS/Data/ \
+        #&& rm -f /usr/Intro_to_NGS/Data/*.tar.gz \
+        ## Create environments
+        #&& fix-permissions "/home/${NB_USER}" \
+        #&& fix-permissions "${CONDA_DIR}"
     else
         echo "-----> Using your own course material."
     fi
 
     ### install kernels - this goes into start-jupyter
-    echo "-----> Installing course kernels on jupyterlab"
-    "${CONDA_DIR}"/envs/NGS_aarhus_py/bin/python -m ipykernel install --user --name="NGS_python" --display-name "NGS (Python)" && \
-    "${CONDA_DIR}"/envs/NGS_aarhus_r/bin/R -e "IRkernel::installspec(user=TRUE, name = 'NGS_R', displayname = 'NGS (R)')"
+    #echo "-----> Installing course kernels on jupyterlab"
+    #"${CONDA_DIR}"/envs/NGS_aarhus_py/bin/python -m ipykernel install --user --name="NGS_python" --display-name "NGS (Python)" && \
+    #"${CONDA_DIR}"/envs/NGS_aarhus_r/bin/R -e "IRkernel::installspec(user=TRUE, name = 'NGS_R', displayname = 'NGS (R)')"
 
     ### modify kernel files with system variables
-    cp /usr/Intro_to_NGS/Environments/kernel_py_docker.json ~/.local/share/jupyter/kernels/ngs_python/kernel.json && \
-    cp /usr/Intro_to_NGS/Environments/kernel_R_docker.json ~/.local/share/jupyter/kernels/ngs_r/kernel.json
-    
-    printf  "\n==================  "
-    printf  "\n Start JupyterLab  \n"
-    printf  "==================  \n\n"
+    #cp /usr/Intro_to_NGS/Environments/kernel_py_docker.json ~/.local/share/jupyter/kernels/ngs_python/kernel.json && \
+    #cp /usr/Intro_to_NGS/Environments/kernel_R_docker.json ~/.local/share/jupyter/kernels/ngs_r/kernel.json
+    #
+    #printf  "\n==================  "
+    #printf  "\n Start JupyterLab  \n"
+    #printf  "==================  \n\n"
     #add course name as variable to be used
     bash -c "COURSE=${COURSE} jupyter lab --NotebookApp.token='' "
 
 fi
 
-if [ "${COURSE}" == "IGV Genomic Browser" ]
+if [ "${COURSE}" == "Intro_to_PopGen" ]
+then
+    echo "-----> Chosen course: Intro to population Genetics"
+
+    if [ ! -d "Course_Env" ] 
+    then
+        echo "----------> downloading packages"
+        mkdir -p ${COURSE_DIR}/Course_Env
+        fix-permissions ${COURSE_DIR}/Course_Env
+        wget -t 10 -O ${COURSE_DIR}/Course_Env.tar.gz https://zenodo.org/record/7660785/files/Course_Env.unpacked.tar.gz?download=1;
+        echo "----------> extracting packages"
+        tar -zxf ${COURSE_DIR}/Course_Env.tar.gz -C ${COURSE_DIR}/Course_Env
+        rm -f ${COURSE_DIR}/Course_Env.tar.gz
+    else
+        ln -sf Course_Env ${COURSE_DIR}/Course_Env
+    fi
+
+    if [ ! -d "Data" ] 
+    then 
+        echo "----------> downloading data"
+        mkdir -p ${COURSE_DIR}/Data
+        fix-permissions ${COURSE_DIR}/Data
+        wget https://zenodo.org/record/7660785/files/Data.tar.gz?download=1 -O ${COURSE_DIR}/Data.tar.gz
+        echo "----------> extracting data"
+        tar -zxf ${COURSE_DIR}/Data.tar.gz -C ${COURSE_DIR}/Data
+        rm -f ${COURSE_DIR}/Data.tar.gz 
+    else
+        ln -sf Data ${COURSE_DIR}/Data
+    fi
+
+    echo "----------> Installing course kernels on jupyterlab"
+    ${COURSE_DIR}/Course_Env/bin/python -m ipykernel install --user --name="args_dashboard" --display-name "args dashboard"
+    ${COURSE_DIR}/Course_Env/bin/R -e "IRkernel::installspec(user=TRUE, name = 'popgen_course', displayname = 'popgen course')"
+    ${COURSE_DIR}/Course_Env/bin/python -m bash_kernel.install
+    cp ${COURSE_DIR}/Course_Env/lib/libcrypto.so.3 ${COURSE_DIR}/Course_Env/lib/libcrypto.so.1.0.0
+
+    git clone -b ucloud https://github.com/kaspermunch/PopulationGenomicsCourse.git /home/${NB_USER}/course
+    mv /home/${NB_USER}/course/Exercises ./
+
+    # kernel configurations with updated $PATH included
+    cp /home/${NB_USER}/course/uCloud/Configurations/kernelBash.json ~/.local/share/jupyter/kernels/bash/kernel.json
+
+    printf  "\n==================  "
+    printf  "\n Start JupyterLab  \n"
+    printf  "==================  \n\n"
+    #add course name as variable to be used
+    bash -c "jupyter lab --NotebookApp.token='' "
+    
+fi
+
+
+if [ "${COURSE}" == "IGV" ]
 then
     echo "-----> Chosen tool: Interactive Genomic Browser"
     cd /usr/igv-webapp
     npx http-server --port 8787 -a 0.0.0.0 dist
-    
 fi
+
 
 
