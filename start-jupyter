@@ -28,7 +28,7 @@ then
         echo "----------> downloading packages"
         mkdir -p ${COURSE_DIR}/Course_Env
         fix-permissions ${COURSE_DIR}/Course_Env
-        wget -t 10 -O ${COURSE_DIR}/Course_Env.tar.gz https://zenodo.org/record/7660785/files/Course_Env.unpacked.tar.gz?download=1;
+        wget -t 10 -O ${COURSE_DIR}/Course_Env.tar.gz https://zenodo.org/record/7665066/files/Course_Env.unpacked.tar.gz?download=1;
         echo "----------> extracting packages"
         tar -zxf ${COURSE_DIR}/Course_Env.tar.gz -C ${COURSE_DIR}/Course_Env
         rm -f ${COURSE_DIR}/Course_Env.tar.gz
@@ -41,12 +41,10 @@ then
         echo "----------> downloading data"
         mkdir -p ${COURSE_DIR}/Data
         fix-permissions ${COURSE_DIR}/Data
-        wget https://zenodo.org/record/6952995/files/clover.tar.gz?download=1 -O ${COURSE_DIR}/clover.tar.gz
-        wget https://zenodo.org/record/6952995/files/singlecell.tar.gz?download=1 -O ${COURSE_DIR}/scrna.tar.gz
+        wget -t 10 https://zenodo.org/record/7665066/files/Data.tar.gz?download=1 -O ${COURSE_DIR}/Data.tar.gz
         echo "----------> extracting data"
-        tar -zxf ${COURSE_DIR}/clover.tar.gz -C ${COURSE_DIR}/Data/Clover_Data
-        tar -zxf ${COURSE_DIR}/scrna.tar.gz -C ${COURSE_DIR}/Data/scrna_Data
-        rm -f ${COURSE_DIR}/clover.tar.gz ${COURSE_DIR}/scrna.tar.gz 
+        tar -zxf ${COURSE_DIR}/Data.tar.gz -C ${COURSE_DIR}/Data
+        rm -f ${COURSE_DIR}/Data.tar.gz ${COURSE_DIR}/Data.tar.gz 
     else
         ln -sf Data ${COURSE_DIR}/Data
     fi
@@ -65,7 +63,7 @@ then
         mv /home/${NB_USER}/course/Notebooks ./
     else
         ln -sf Notebooks ${COURSE_DIR}/Notebooks
-
+    fi
     
 
     printf  "\n==================  "
@@ -97,7 +95,7 @@ then
         echo "----------> downloading data"
         mkdir -p ${COURSE_DIR}/Data
         fix-permissions ${COURSE_DIR}/Data
-        wget https://zenodo.org/record/7660785/files/Data.tar.gz?download=1 -O ${COURSE_DIR}/Data.tar.gz
+        wget -t 10 https://zenodo.org/record/7660785/files/Data.tar.gz?download=1 -O ${COURSE_DIR}/Data.tar.gz
         echo "----------> extracting data"
         tar -zxf ${COURSE_DIR}/Data.tar.gz -C ${COURSE_DIR}/Data
         rm -f ${COURSE_DIR}/Data.tar.gz 
@@ -118,7 +116,7 @@ then
         mv /home/${NB_USER}/course/Notebooks ./
     else
         ln -sf Notebooks ${COURSE_DIR}/Notebooks
-    mv /home/${NB_USER}/course/Exercises ./
+    fi
 
     # kernel configurations with updated $PATH included
     cp /home/${NB_USER}/course/uCloud/Configurations/kernelBash.json ~/.local/share/jupyter/kernels/bash/kernel.json
@@ -138,6 +136,3 @@ then
     cd /usr/igv-webapp
     npx http-server --port 8787 -a 0.0.0.0 dist
 fi
-
-
-

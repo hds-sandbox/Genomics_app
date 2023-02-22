@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# Define default values
+data_url=""
+env_url=""
+
+# Parse command line arguments using getopt
+while getopts ":d:e:" opt; do
+  case $opt in
+    d) data_url="$OPTARG"
+    ;;
+    e) env_url="$OPTARG"
+    ;;
+    \?) echo "Invalid option -$OPTARG" >&2
+    ;;
+  esac
+done
+
+# Check if both options are provided
+if [[ -z $data_url || -z $env_url ]]; then
+  echo "Usage: $0 -d <data_url> -e <env_url>"
+  exit 1
+fi
+
+# Download the files using wget
+wget $data_url
+wget $env_url
