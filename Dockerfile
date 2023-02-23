@@ -21,24 +21,16 @@ RUN mkdir /work/Material && \
  printf "Install JupyterLab extensions:" && \    
  pip install jupyter_server && \
  pip install --no-cache-dir "nteract-on-jupyter" && \
- #&& jupyter labextension install "jupyter-threejs" \
- #&& jupyter labextension install "ipyvolume" \
  ## add support for LaTeX docs
  pip install --no-cache-dir "jupyterlab-latex" && \
- ## open spreadsheets such as Excel and OpenOffice
- #jupyter labextension install "jupyterlab-spreadsheet" && \
  ## add top bar
  pip install --no-cache-dir "jupyterlab-topbar" && \
  pip install --no-cache-dir "jupyterlab-topbar-text" && \
  ## add system monitor
  pip install --no-cache-dir "jupyterlab-system-monitor" && \
- ## add theme toggle bottom
- #&& jupyter labextension install "jupyterlab-theme-toggle" \
  ## add code formatter
  pip install --no-cache-dir "autopep8" "yapf" "isort" "black" && \
  pip install --no-cache-dir "jupyterlab_code_formatter" && \
- ## add nbdime
- # && pip install --no-cache-dir "nbdime" \
  ## add Bokeh extension
  pip install --no-cache-dir "jupyter_bokeh" && \
  ## add Plotly extension

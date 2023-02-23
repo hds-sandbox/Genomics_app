@@ -14,8 +14,6 @@ done
 COURSE_DIR=/work/Material/
 mkdir -p ${COURSE_DIR}
 fix-permissions ${COURSE_DIR}
-chown -R "${NB_USER}":"${NB_GID}" ${COURSE_DIR}
-chmod g+rwx ${COURSE_DIR}
 
 printf  "\n==================  "
 printf  "\n Selecting Course  \n"
@@ -110,7 +108,7 @@ then
     ${COURSE_DIR}/Course_Env/bin/R -e "IRkernel::installspec(user=TRUE, name = 'popgen_course', displayname = 'popgen course')"
     ${COURSE_DIR}/Course_Env/bin/python -m bash_kernel.install
     
-    git clone --branch ucloud --depth 1 --branch v2023.03.01  https://github.com/kaspermunch/PopulationGenomicsCourse.git /home/${NB_USER}/course
+    git clone --branch ucloud --depth 1  https://github.com/kaspermunch/PopulationGenomicsCourse.git /home/${NB_USER}/course
     
     if [ ! -d "Notebooks" ] 
     then 
