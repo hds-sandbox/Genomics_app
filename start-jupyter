@@ -14,6 +14,8 @@ done
 COURSE_DIR=/work/Material/
 mkdir -p ${COURSE_DIR}
 fix-permissions ${COURSE_DIR}
+chown -R "${NB_USER}":"${NB_GID}" ${COURSE_DIR}
+chmod g+rwx ${COURSE_DIR}
 
 printf  "\n==================  "
 printf  "\n Selecting Course  \n"
@@ -28,7 +30,7 @@ then
         echo "----------> downloading packages"
         mkdir -p ${COURSE_DIR}/Course_Env
         fix-permissions ${COURSE_DIR}/Course_Env
-        wget -t 10 -O ${COURSE_DIR}/Course_Env.tar.gz https://zenodo.org/record/7665066/files/Course_Env.unpacked.tar.gz?download=1;
+        wget -t 10 -O ${COURSE_DIR}/Course_Env.tar.gz https://zenodo.org/record/7670370/files/Course_Env.unpacked.tar.gz?download=1;
         echo "----------> extracting packages"
         tar -zxf ${COURSE_DIR}/Course_Env.tar.gz -C ${COURSE_DIR}/Course_Env
         rm -f ${COURSE_DIR}/Course_Env.tar.gz
@@ -41,7 +43,7 @@ then
         echo "----------> downloading data"
         mkdir -p ${COURSE_DIR}/Data
         fix-permissions ${COURSE_DIR}/Data
-        wget -t 10 https://zenodo.org/record/7665066/files/Data.tar.gz?download=1 -O ${COURSE_DIR}/Data.tar.gz
+        wget -t 10 https://zenodo.org/record/7670370/files/Data.tar.gz?download=1 -O ${COURSE_DIR}/Data.tar.gz
         echo "----------> extracting data"
         tar -zxf ${COURSE_DIR}/Data.tar.gz -C ${COURSE_DIR}/Data
         rm -f ${COURSE_DIR}/Data.tar.gz ${COURSE_DIR}/Data.tar.gz 
@@ -82,7 +84,7 @@ then
         echo "----------> downloading packages"
         mkdir -p ${COURSE_DIR}/Course_Env
         fix-permissions ${COURSE_DIR}/Course_Env
-        wget -t 10 -O ${COURSE_DIR}/Course_Env.tar.gz https://zenodo.org/record/7660785/files/Course_Env.unpacked.tar.gz?download=1;
+        wget -t 10 -O ${COURSE_DIR}/Course_Env.tar.gz https://zenodo.org/record/7670839/files/Course_Env.unpacked.tar.gz?download=1;
         echo "----------> extracting packages"
         tar -zxf ${COURSE_DIR}/Course_Env.tar.gz -C ${COURSE_DIR}/Course_Env
         rm -f ${COURSE_DIR}/Course_Env.tar.gz
@@ -95,7 +97,7 @@ then
         echo "----------> downloading data"
         mkdir -p ${COURSE_DIR}/Data
         fix-permissions ${COURSE_DIR}/Data
-        wget -t 10 https://zenodo.org/record/7660785/files/Data.tar.gz?download=1 -O ${COURSE_DIR}/Data.tar.gz
+        wget -t 10 https://zenodo.org/record/7670839/files/Data.tar.gz?download=1 -O ${COURSE_DIR}/Data.tar.gz
         echo "----------> extracting data"
         tar -zxf ${COURSE_DIR}/Data.tar.gz -C ${COURSE_DIR}/Data
         rm -f ${COURSE_DIR}/Data.tar.gz 
@@ -107,8 +109,7 @@ then
     ${COURSE_DIR}/Course_Env/bin/python -m ipykernel install --user --name="args_dashboard" --display-name "args dashboard"
     ${COURSE_DIR}/Course_Env/bin/R -e "IRkernel::installspec(user=TRUE, name = 'popgen_course', displayname = 'popgen course')"
     ${COURSE_DIR}/Course_Env/bin/python -m bash_kernel.install
-    cp ${COURSE_DIR}/Course_Env/lib/libcrypto.so.3 ${COURSE_DIR}/Course_Env/lib/libcrypto.so.1.0.0
-
+    
     git clone --branch ucloud --depth 1 --branch v2023.03.01  https://github.com/kaspermunch/PopulationGenomicsCourse.git /home/${NB_USER}/course
     
     if [ ! -d "Notebooks" ] 
@@ -124,7 +125,6 @@ then
     printf  "\n==================  "
     printf  "\n Start JupyterLab  \n"
     printf  "==================  \n\n"
-    #add course name as variable to be used
     bash -c "jupyter lab --NotebookApp.token='' "
     
 fi
