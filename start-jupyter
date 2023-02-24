@@ -86,6 +86,7 @@ then
         echo "----------> extracting packages"
         tar -zxf ${COURSE_DIR}/Course_Env.tar.gz -C ${COURSE_DIR}/Course_Env
         rm -f ${COURSE_DIR}/Course_Env.tar.gz
+        cp ${COURSE_DIR}/Course_Env/lib/libcrypto.so.3 ${COURSE_DIR}/Course_Env/lib/libcrypto.so.1.0.0
     else
         ln -sf Course_Env ${COURSE_DIR}/Course_Env
     fi
@@ -108,13 +109,13 @@ then
     ${COURSE_DIR}/Course_Env/bin/R -e "IRkernel::installspec(user=TRUE, name = 'popgen_course', displayname = 'popgen course')"
     ${COURSE_DIR}/Course_Env/bin/python -m bash_kernel.install
     
-    git clone --branch ucloud --depth 1  https://github.com/kaspermunch/PopulationGenomicsCourse.git /home/${NB_USER}/course
+    git clone --branch ucloud --depth 1 --branch v2023.03.01  https://github.com/hds-sandbox/PopulationGenomicsCourse.git /home/${NB_USER}/course
     
-    if [ ! -d "Notebooks" ] 
+    if [ ! -d "Exercises" ] 
     then 
-        mv /home/${NB_USER}/course/Notebooks ./
+        mv /home/${NB_USER}/course/Exercises ./
     else
-        ln -sf Notebooks ${COURSE_DIR}/Notebooks
+        ln -sf Notebooks ${COURSE_DIR}/Exercises
     fi
 
     # kernel configurations with updated $PATH included
