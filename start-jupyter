@@ -23,19 +23,6 @@ if [ "${COURSE}" == "Intro_to_NGS" ]
 then
     echo "-----> Chosen course: Introduction to NGS data"
 
-    if [ ! -d "Course_Env" ] 
-    then
-        echo "----------> downloading packages"
-        mkdir -p ${COURSE_DIR}/Course_Env
-        fix-permissions ${COURSE_DIR}/Course_Env
-        wget -t 10 -O ${COURSE_DIR}/Course_Env.tar.gz https://zenodo.org/record/7670370/files/Course_Env.unpacked.tar.gz?download=1;
-        echo "----------> extracting packages"
-        tar -zxf ${COURSE_DIR}/Course_Env.tar.gz -C ${COURSE_DIR}/Course_Env
-        rm -f ${COURSE_DIR}/Course_Env.tar.gz
-    else
-        ln -sf Course_Env ${COURSE_DIR}/Course_Env
-    fi
-
     if [ ! -d "Data" ] 
     then 
         echo "----------> downloading data"
@@ -77,28 +64,13 @@ if [ "${COURSE}" == "Intro_to_PopGen" ]
 then
     echo "-----> Chosen course: Intro to population Genetics"
 
-    if [ ! -d "Course_Env" ] 
-    then
-        echo "----------> downloading packages"
-        mkdir -p ${COURSE_DIR}/Course_Env
-        fix-permissions ${COURSE_DIR}/Course_Env
-        wget -t 10 -O ${COURSE_DIR}/Course_Env.tar.gz https://zenodo.org/record/7670839/files/Course_Env.unpacked.tar.gz?download=1;
-        echo "----------> extracting packages"
-        tar -zxf ${COURSE_DIR}/Course_Env.tar.gz -C ${COURSE_DIR}/Course_Env
-        rm -f ${COURSE_DIR}/Course_Env.tar.gz
-        cp ${COURSE_DIR}/Course_Env/lib/libcrypto.so.3 ${COURSE_DIR}/Course_Env/lib/libcrypto.so.1.0.0
-    else
-        ln -sf Course_Env ${COURSE_DIR}/Course_Env
-    fi
-
     if [ ! -d "Data" ] 
     then 
         echo "----------> downloading data"
-        mkdir -p ${COURSE_DIR}/Data
         fix-permissions ${COURSE_DIR}/Data
         wget -t 10 https://zenodo.org/record/7670839/files/Data.tar.gz?download=1 -O ${COURSE_DIR}/Data.tar.gz
         echo "----------> extracting data"
-        tar -zxf ${COURSE_DIR}/Data.tar.gz -C ${COURSE_DIR}/Data
+        tar -zxf ${COURSE_DIR}/Data.tar.gz -C ${COURSE_DIR}/
         rm -f ${COURSE_DIR}/Data.tar.gz 
     else
         ln -sf Data ${COURSE_DIR}/Data
@@ -109,13 +81,13 @@ then
     ${COURSE_DIR}/Course_Env/bin/R -e "IRkernel::installspec(user=TRUE, name = 'popgen_course', displayname = 'popgen course')"
     ${COURSE_DIR}/Course_Env/bin/python -m bash_kernel.install
     
-    git clone --branch ucloud --depth 1 --branch v2023.03.01  https://github.com/hds-sandbox/PopulationGenomicsCourse.git /home/${NB_USER}/course
+    git clone --branch ucloud --depth 1 --branch 2023.03.01  https://github.com/hds-sandbox/PopulationGenomicsCourse.git /home/${NB_USER}/course
     
-    if [ ! -d "Exercises" ] 
+    if [ ! -d "Notebooks" ] 
     then 
-        mv /home/${NB_USER}/course/Exercises ./
+        mv /home/${NB_USER}/course/Notebooks ./
     else
-        ln -sf Notebooks ${COURSE_DIR}/Exercises
+        ln -sf Notebooks ${COURSE_DIR}/Notebooks
     fi
 
     # kernel configurations with updated $PATH included
