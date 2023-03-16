@@ -64,9 +64,9 @@ RUN mkdir /work/Material && \
  fix-permissions /usr/igv-webapp && \
  npm install --prefix /usr/igv-webapp && \
  npm run --prefix /usr/igv-webapp build && \
- npm --force cache clean && \
+ npm --force cache clea
  ## executable start script
- RUN chmod +x ${CONDA_DIR}/bin/start-jupyter
+RUN chmod +x ${CONDA_DIR}/bin/start-jupyter
 
 USER 11042
 
