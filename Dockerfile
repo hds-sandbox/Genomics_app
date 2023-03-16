@@ -20,6 +20,8 @@ EXPOSE 8888
 
 ## Environments files
 COPY ./environments/ /home/${NB_USER}/environments
+## Set startup script in the PATH
+COPY --chown="${NB_USER}":"${NB_GID}" start-jupyter ${CONDA_DIR}/bin/
 
 
 ## make course folder
@@ -30,7 +32,7 @@ RUN mkdir /work/Material && \
  fix-permissions "${CONDA_DIR}" && \
  ## create conda environment(s)
  mamba env create -f /home/${NB_USER}/environments/env_popgen_ngs.full.yml -p ${CONDA_DIR}/envs/Course_Env && \
- cp ${CONDA_DIR}/envs/Course_Env/lib/libcrypto.so.3 ${CONDA_DIR}/envs/Course_Env/lib/libcrypto.so.1.0.0 && \
+ #cp ${CONDA_DIR}/envs/Course_Env/lib/libcrypto.so.3 ${CONDA_DIR}/envs/Course_Env/lib/libcrypto.so.1.0.0 && \
  ln -sf ${CONDA_DIR}/envs/Course_Env /work/Material/Course_Env && \
  mamba clean --all -f -y && \
  ## add JupyterLab Extensions
@@ -55,20 +57,20 @@ RUN mkdir /work/Material && \
  pip install --no-cache-dir  "plotly" && \
  pip install --no-cache-dir "jupyter-dash" && \
  jupyter lab build -y && \
- jupiter lab clean && \
+ jupyter lab clean && \
  ## setup for the IGV browser
  npm install --global http-server && \
  git clone -b v1.12.9 https://github.com/igvteam/igv-webapp.git /usr/igv-webapp && \
  fix-permissions /usr/igv-webapp && \
  npm install --prefix /usr/igv-webapp && \
  npm run --prefix /usr/igv-webapp build && \
- npm --force cache clean
+ npm --force cache clean && \
+ ## executable start script
+ RUN chmod +x ${CONDA_DIR}/bin/start-jupyter
 
 USER 11042
 
-## Set startup script in the PATH
-COPY --chown="${NB_USER}":"${NB_GID}" start-jupyter ${CONDA_DIR}/bin/
-## executable start script
-RUN chmod +x ${CONDA_DIR}/bin/start-jupyter
+
+
 
 WORKDIR /work/Material
