@@ -27,11 +27,9 @@ RUN mkdir /work/Material && \
  ## Permissions
  fix-permissions "/work/Material/" && \
  fix-permissions "/home/${NB_USER}" && \
- fix-permissions "${CONDA_DIR}"
-
+ fix-permissions "${CONDA_DIR}" && \
  ## create conda environment(s)
-RUN mamba env create -f /home/${NB_USER}/environments/env_popgen_ngs.full.yml \
-                     -p ${CONDA_DIR}/envs/Course_Env && \
+ mamba env create -f /home/${NB_USER}/environments/env_popgen_ngs.full.yml -p ${CONDA_DIR}/envs/Course_Env && \
  cp ${CONDA_DIR}/envs/Course_Env/lib/libcrypto.so.3 ${CONDA_DIR}/envs/Course_Env/lib/libcrypto.so.1.0.0 && \
  ln -sf ${CONDA_DIR}/envs/Course_Env /work/Material/Course_Env && \
  mamba clean --all -f -y && \
