@@ -11,9 +11,13 @@ do
     esac
 done
 
-COURSE_DIR=/work/Material/
-mkdir -p ${COURSE_DIR}
-fix-permissions ${COURSE_DIR}
+PORT=8888
+
+COURSE_DIR=/work/Material
+mkdir -p "${COURSE_DIR}"
+fix-permissions "${COURSE_DIR}"
+
+ln -sf "${CONDA_DIR}"/envs/Course_Env /work/Material/Course_Env
 
 printf  "\n==================  "
 printf  "\n Selecting Course  \n"
@@ -23,40 +27,41 @@ if [ "${COURSE}" == "Intro_to_NGS" ]
 then
     echo "-----> Chosen course: Introduction to NGS data"
 
-    if [ ! -d "Data" ] 
-    then 
+    if [ ! -d "Data" ]
+    then
         echo "----------> downloading data"
-        mkdir -p ${COURSE_DIR}/Data
-        fix-permissions ${COURSE_DIR}/Data
-        wget -t 10 https://zenodo.org/record/7670370/files/Data.tar.gz?download=1 -O ${COURSE_DIR}/Data.tar.gz
+        mkdir -p "${COURSE_DIR}"/Data
+        fix-permissions "${COURSE_DIR}"/Data
+        wget -t 10 https://zenodo.org/record/7670370/files/Data.tar.gz?download=1 -O "${COURSE_DIR}"/Data.tar.gz
         echo "----------> extracting data"
-        tar -zxf ${COURSE_DIR}/Data.tar.gz -C ${COURSE_DIR}/Data
-        rm -f ${COURSE_DIR}/Data.tar.gz ${COURSE_DIR}/Data.tar.gz 
+        tar -zxf "${COURSE_DIR}"/Data.tar.gz -C "${COURSE_DIR}"/Data > /dev/null 2>&1
+        rm -f "${COURSE_DIR}"/Data.tar.gz "${COURSE_DIR}"/Data.tar.gz
     else
-        ln -sf Data ${COURSE_DIR}/Data
+        ln -sf Data "${COURSE_DIR}"/Data
     fi
 
-    echo "----------> Installing course kernels on jupyterlab"
-    ${COURSE_DIR}/Course_Env/bin/python -m ipykernel install --user --name="ngs_python" --display-name "NGS (Python)"
-    ${COURSE_DIR}/Course_Env/bin/R -e "IRkernel::installspec(user=TRUE, name = 'ngs_r', displayname = 'NGS (R)')"
-    
-    git clone --depth 1 -b v2023.03.01 https://github.com/hds-sandbox/NGS_summer_course_Aarhus.git /home/${NB_USER}/course
+    echo "----------> Installing course kernels on JupyterLab"
+    "${COURSE_DIR}"/Course_Env/bin/python -m ipykernel install --user --name="ngs_python" --display-name "NGS (Python)"
+    "${COURSE_DIR}"/Course_Env/bin/R -e "IRkernel::installspec(user=TRUE, name = 'ngs_r', displayname = 'NGS (R)')"
+
+    git clone --depth 1 -b v2023.03.01 https://github.com/hds-sandbox/NGS_summer_course_Aarhus.git /home/"${NB_USER}"/course
+    ln -sf /home/"${NB_USER}"/course/Scripts/ /work/Scripts
+
     # kernel configurations with updated $PATH included
-    cp /home/${NB_USER}/course/Environments/kernel_py_docker.json ~/.local/share/jupyter/kernels/ngs_python/kernel.json && \
-    cp /home/${NB_USER}/course/Environments/kernel_R_docker.json ~/.local/share/jupyter/kernels/ngs_r/kernel.json
+    cp /home/"${NB_USER}"/course/Environments/kernel_py.json ~/.local/share/jupyter/kernels/ngs_python/kernel.json && \
+    cp /home/"${NB_USER}"/course/Environments/kernel_R.json ~/.local/share/jupyter/kernels/ngs_r/kernel.json
 
-    if [ ! -d "Notebooks" ] 
-    then 
-        mv /home/${NB_USER}/course/Notebooks ./
+    if [ ! -d "Notebooks" ]
+    then
+        mv /home/"${NB_USER}"/course/Notebooks ./
     else
-        ln -sf Notebooks ${COURSE_DIR}/Notebooks
+        ln -sf Notebooks "${COURSE_DIR}"/Notebooks
     fi
-    
 
     printf  "\n==================  "
     printf  "\n Start JupyterLab  \n"
     printf  "==================  \n\n"
-    bash -c "jupyter lab --NotebookApp.token='' "
+    bash -c "jupyter lab --NotebookApp.token='' --ip=0.0.0.0 --port ${PORT}"
 
 fi
 
@@ -64,46 +69,46 @@ if [ "${COURSE}" == "Intro_to_PopGen" ]
 then
     echo "-----> Chosen course: Intro to population Genetics"
 
-    if [ ! -d "Data" ] 
-    then 
+    if [ ! -d "Data" ]
+    then
         echo "----------> downloading data"
-        fix-permissions ${COURSE_DIR}/Data
-        wget -t 10 https://zenodo.org/record/7670839/files/Data.tar.gz?download=1 -O ${COURSE_DIR}/Data.tar.gz
+        mkdir -p "${COURSE_DIR}"/Data
+        fix-permissions "${COURSE_DIR}"/Data
+        wget -t 10 https://zenodo.org/record/7670839/files/Data.tar.gz?download=1 -O "${COURSE_DIR}"/Data.tar.gz
         echo "----------> extracting data"
-        tar -zxf ${COURSE_DIR}/Data.tar.gz -C ${COURSE_DIR}/
-        rm -f ${COURSE_DIR}/Data.tar.gz 
+        tar -zxf "${COURSE_DIR}"/Data.tar.gz -C "${COURSE_DIR}"/ > /dev/null 2>&1
+        rm -f "${COURSE_DIR}"/Data.tar.gz
     else
-        ln -sf Data ${COURSE_DIR}/Data
+        ln -sf Data "${COURSE_DIR}"/Data
     fi
 
-    echo "----------> Installing course kernels on jupyterlab"
-    ${COURSE_DIR}/Course_Env/bin/python -m ipykernel install --user --name="args_dashboard" --display-name "args dashboard"
-    ${COURSE_DIR}/Course_Env/bin/R -e "IRkernel::installspec(user=TRUE, name = 'popgen_course', displayname = 'popgen course')"
-    ${COURSE_DIR}/Course_Env/bin/python -m bash_kernel.install
-    
-    git clone --branch ucloud --depth 1 --branch 2023.03.01  https://github.com/hds-sandbox/PopulationGenomicsCourse.git /home/${NB_USER}/course
-    
-    if [ ! -d "Notebooks" ] 
-    then 
-        mv /home/${NB_USER}/course/Notebooks ./
+    echo "----------> Installing course kernels on JupyterLab"
+    "${COURSE_DIR}"/Course_Env/bin/python -m ipykernel install --user --name="args_dashboard" --display-name "args dashboard"
+    "${COURSE_DIR}"/Course_Env/bin/R -e "IRkernel::installspec(user=TRUE, name = 'popgen_course', displayname = 'popgen course')"
+    "${COURSE_DIR}"/Course_Env/bin/python -m bash_kernel.install
+
+    git clone --branch ucloud --depth 1 --branch 2023.03.01  https://github.com/hds-sandbox/PopulationGenomicsCourse.git /home/"${NB_USER}"/course
+
+    if [ ! -d "Notebooks" ]
+    then
+        mv /home/"${NB_USER}"/course/Notebooks ./
     else
-        ln -sf Notebooks ${COURSE_DIR}/Notebooks
+        ln -sf Notebooks "${COURSE_DIR}"/Notebooks
     fi
 
     # kernel configurations with updated $PATH included
-    cp /home/${NB_USER}/course/uCloud/Configurations/kernelBash.json ~/.local/share/jupyter/kernels/bash/kernel.json
+    cp /home/"${NB_USER}"/course/uCloud/Configurations/kernelBash.json ~/.local/share/jupyter/kernels/bash/kernel.json
 
     printf  "\n==================  "
     printf  "\n Start JupyterLab  \n"
     printf  "==================  \n\n"
-    bash -c "jupyter lab --NotebookApp.token='' "
-    
-fi
 
+    bash -c "jupyter lab --NotebookApp.token='' --ip=0.0.0.0 --port ${PORT}"
+fi
 
 if [ "${COURSE}" == "IGV" ]
 then
     echo "-----> Chosen tool: Interactive Genomic Browser"
-    cd /usr/igv-webapp
-    npx http-server --port 8787 -a 0.0.0.0 dist
+    cd /usr/igv-webapp || exit
+    npx http-server --port "${PORT}" -a 0.0.0.0 dist
 fi
