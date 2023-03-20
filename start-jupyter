@@ -13,11 +13,11 @@ done
 
 PORT=8888
 
-COURSE_DIR=/work/Material
-mkdir -p "${COURSE_DIR}"
-fix-permissions "${COURSE_DIR}"
+COURSE_DIR=/work/
+mkdir -p ${COURSE_DIR}
+fix-permissions ${COURSE_DIR}
 
-ln -sf "${CONDA_DIR}"/envs/Course_Env /work/Material/Course_Env
+ln -sf "${CONDA_DIR}"/envs/Course_Env ${COURSE_DIR}/Course_Env
 
 printf  "\n==================  "
 printf  "\n Selecting Course  \n"
@@ -36,26 +36,24 @@ then
         echo "----------> extracting data"
         tar -zxf "${COURSE_DIR}"/Data.tar.gz -C "${COURSE_DIR}"/Data > /dev/null 2>&1
         rm -f "${COURSE_DIR}"/Data.tar.gz "${COURSE_DIR}"/Data.tar.gz
-    else
-        ln -sf Data "${COURSE_DIR}"/Data
     fi
 
     echo "----------> Installing course kernels on JupyterLab"
     "${COURSE_DIR}"/Course_Env/bin/python -m ipykernel install --user --name="ngs_python" --display-name "NGS (Python)"
     "${COURSE_DIR}"/Course_Env/bin/R -e "IRkernel::installspec(user=TRUE, name = 'ngs_r', displayname = 'NGS (R)')"
 
-    git clone --depth 1 -b v2023.03.01 https://github.com/hds-sandbox/NGS_summer_course_Aarhus.git /home/"${NB_USER}"/course
-    ln -sf /home/"${NB_USER}"/course/Scripts/ /work/Scripts
-
+    
+    git clone --depth 1 -b 2023.03.01 https://github.com/hds-sandbox/NGS_summer_course_Aarhus.git /home/"${NB_USER}"/course
     # kernel configurations with updated $PATH included
     cp /home/"${NB_USER}"/course/Environments/kernel_py.json ~/.local/share/jupyter/kernels/ngs_python/kernel.json && \
     cp /home/"${NB_USER}"/course/Environments/kernel_R.json ~/.local/share/jupyter/kernels/ngs_r/kernel.json
 
+    
+    mv /home/"${NB_USER}"/course/Scripts ${COURSE_DIR}/
+
     if [ ! -d "Notebooks" ]
     then
-        mv /home/"${NB_USER}"/course/Notebooks ./
-    else
-        ln -sf Notebooks "${COURSE_DIR}"/Notebooks
+        mv /home/"${NB_USER}"/course/Notebooks "${COURSE_DIR}"/
     fi
 
     printf  "\n==================  "
@@ -91,9 +89,7 @@ then
 
     if [ ! -d "Notebooks" ]
     then
-        mv /home/"${NB_USER}"/course/Notebooks ./
-    else
-        ln -sf Notebooks "${COURSE_DIR}"/Notebooks
+        mv /home/"${NB_USER}"/course/Notebooks "${COURSE_DIR}"/
     fi
 
     # kernel configurations with updated $PATH included

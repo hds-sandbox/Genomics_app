@@ -10,6 +10,8 @@ LABEL software="Genomics Sandbox" \
 
 USER 0
 
+EXPOSE 8850
+
 ## Environments files
 COPY --chown="${NB_USER}":"${NB_GID}" environments /home/${NB_USER}/environments
 
