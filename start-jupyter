@@ -85,7 +85,7 @@ then
     "${COURSE_DIR}"/Course_Env/bin/R -e "IRkernel::installspec(user=TRUE, name = 'popgen_course', displayname = 'popgen course')"
     "${COURSE_DIR}"/Course_Env/bin/python -m bash_kernel.install
 
-    git clone --branch ucloud --depth 1 --branch 2023.03.01  https://github.com/hds-sandbox/PopulationGenomicsCourse.git /home/"${NB_USER}"/course
+    git clone --branch ucloud --depth 1 --branch 2023.03.24  https://github.com/hds-sandbox/PopulationGenomicsCourse.git /home/"${NB_USER}"/course
 
     if [ ! -d "Notebooks" ]
     then
