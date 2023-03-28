@@ -32,10 +32,12 @@ then
         echo "----------> downloading data"
         mkdir -p "${COURSE_DIR}"/Data
         fix-permissions "${COURSE_DIR}"/Data
-        wget -t 10 https://zenodo.org/record/7670370/files/Data.tar.gz?download=1 -O "${COURSE_DIR}"/Data.tar.gz
+        wget --show-progress -t 10 https://zenodo.org/record/7670370/files/Data.tar.gz?download=1 -O "${COURSE_DIR}"/Data.tar.gz
         echo "----------> extracting data"
         tar -zxf "${COURSE_DIR}"/Data.tar.gz -C "${COURSE_DIR}"/Data > /dev/null 2>&1
         rm -f "${COURSE_DIR}"/Data.tar.gz "${COURSE_DIR}"/Data.tar.gz
+    else
+        echo "----------> data already present"
     fi
 
     echo "----------> Installing course kernels on JupyterLab"
@@ -53,7 +55,10 @@ then
 
     if [ ! -d "Notebooks" ]
     then
+        echo "----------> copying course notebooks"
         mv /home/"${NB_USER}"/course/Notebooks "${COURSE_DIR}"/
+    else
+        echo "----------> notebooks already present"
     fi
 
     printf  "\n==================  "
@@ -72,12 +77,12 @@ then
         echo "----------> downloading data"
         mkdir -p "${COURSE_DIR}"/Data
         fix-permissions "${COURSE_DIR}"/Data
-        wget -t 10 https://zenodo.org/record/7670839/files/Data.tar.gz?download=1 -O "${COURSE_DIR}"/Data.tar.gz
+        wget --show-progress -t 10 https://zenodo.org/record/7670839/files/Data.tar.gz?download=1 -O "${COURSE_DIR}"/Data.tar.gz
         echo "----------> extracting data"
         tar -zxf "${COURSE_DIR}"/Data.tar.gz -C "${COURSE_DIR}"/ > /dev/null 2>&1
         rm -f "${COURSE_DIR}"/Data.tar.gz
     else
-        ln -sf Data "${COURSE_DIR}"/Data
+        echo "----------> data already present"
     fi
 
     echo "----------> Installing course kernels on JupyterLab"
@@ -89,11 +94,53 @@ then
 
     if [ ! -d "Notebooks" ]
     then
+        echo "----------> copying course notebooks"
         mv /home/"${NB_USER}"/course/Notebooks "${COURSE_DIR}"/
+    else
+        echo "----------> notebooks already present"
     fi
 
     # kernel configurations with updated $PATH included
     cp /home/"${NB_USER}"/course/uCloud/Configurations/kernelBash.json ~/.local/share/jupyter/kernels/bash/kernel.json
+
+    printf  "\n==================  "
+    printf  "\n Start JupyterLab  \n"
+    printf  "==================  \n\n"
+
+    bash -c "jupyter lab --NotebookApp.token='' --ip=0.0.0.0 --port ${PORT}"
+fi
+
+if [ "${COURSE}" == "Intro_to_GWAS" ]
+then
+    echo "-----> Chosen course: Intro to GWAS"
+
+    ######### REMEMBER TO UPDATE BRANCH
+    git clone --depth 1  https://github.com/hds-sandbox/GWAS_course.git /home/"${NB_USER}"/course
+    mv /home/"${NB_USER}"/Software "${COURSE_DIR}"/
+    fix-permissions "${COURSE_DIR}"/Data
+
+    echo "----------> Installing course kernels on JupyterLab"
+    "${COURSE_DIR}"/Course_Env/bin/python -m bash_kernel.install
+    "${COURSE_DIR}"/Course_Env/bin/R -e "IRkernel::installspec(user=TRUE, name = 'rgwas', displayname = 'GWAS (R)')"
+    # kernel configurations with updated $PATH included
+    cp /home/"${NB_USER}"/course/uCloud/kernelBash.json ~/.local/share/jupyter/kernels/bash/kernel.json
+    
+    if [ ! -d "Data" ]
+    then
+        echo "----------> copying data"
+        mv /home/"${NB_USER}"/Data "${COURSE_DIR}"/
+        fix-permissions "${COURSE_DIR}"/Data
+    else
+        echo "----------> data already present"
+    fi
+
+    if [ ! -d "Notebooks" ]
+    then
+        echo "----------> copying notebooks"
+        mv /home/"${NB_USER}"/course/Notebooks "${COURSE_DIR}"/
+    else
+        echo "----------> notebooks already present"
+    fi
 
     printf  "\n==================  "
     printf  "\n Start JupyterLab  \n"
