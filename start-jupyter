@@ -126,7 +126,7 @@ then
     if [ ! -d "Data" ]
     then
         echo "----------> copying data"
-        mv /home/"${NB_USER}"/Data "${COURSE_DIR}"/
+        mv /home/"${NB_USER}"/course/Data "${COURSE_DIR}"/
         fix-permissions "${COURSE_DIR}"/Data
     else
         echo "----------> data already present"
