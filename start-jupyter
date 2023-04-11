@@ -45,7 +45,7 @@ then
     "${COURSE_DIR}"/Course_Env/bin/R -e "IRkernel::installspec(user=TRUE, name = 'ngs_r', displayname = 'NGS (R)')"
 
     
-    git clone --depth 1 -b 2023.03.01 https://github.com/hds-sandbox/NGS_summer_course_Aarhus.git /home/"${NB_USER}"/course
+    git clone --depth 1 https://github.com/hds-sandbox/NGS_summer_course_Aarhus.git /home/"${NB_USER}"/course
     # kernel configurations with updated $PATH included
     cp /home/"${NB_USER}"/course/Environments/kernel_py.json ~/.local/share/jupyter/kernels/ngs_python/kernel.json && \
     cp /home/"${NB_USER}"/course/Environments/kernel_R.json ~/.local/share/jupyter/kernels/ngs_r/kernel.json
@@ -90,7 +90,7 @@ then
     "${COURSE_DIR}"/Course_Env/bin/R -e "IRkernel::installspec(user=TRUE, name = 'popgen_course', displayname = 'popgen course')"
     "${COURSE_DIR}"/Course_Env/bin/python -m bash_kernel.install
 
-    git clone --branch ucloud --depth 1 --branch 2023.03.24  https://github.com/hds-sandbox/PopulationGenomicsCourse.git /home/"${NB_USER}"/course
+    git clone --branch ucloud --depth 1  https://github.com/hds-sandbox/PopulationGenomicsCourse.git /home/"${NB_USER}"/course
 
     if [ ! -d "Notebooks" ]
     then
@@ -114,10 +114,8 @@ if [ "${COURSE}" == "Intro_to_GWAS" ]
 then
     echo "-----> Chosen course: Intro to GWAS"
 
-    ######### REMEMBER TO UPDATE BRANCH
     git clone --depth 1  https://github.com/hds-sandbox/GWAS_course.git /home/"${NB_USER}"/course
     mv /home/"${NB_USER}"/Software "${COURSE_DIR}"/
-    fix-permissions "${COURSE_DIR}"/Data
 
     echo "----------> Installing course kernels on JupyterLab"
     "${COURSE_DIR}"/Course_Env/bin/python -m bash_kernel.install
@@ -146,7 +144,7 @@ then
     printf  "\n Start JupyterLab  \n"
     printf  "==================  \n\n"
 
-    bash -c "jupyter lab --NotebookApp.token='' --ip=0.0.0.0 --port ${PORT}"
+    bash -c "jupyter lab --NotebookApp.token='' --log-level=50 --ip=0.0.0.0 --port ${PORT}"
 fi
 
 if [ "${COURSE}" == "IGV" ]

@@ -13,15 +13,18 @@ USER 0
 ## Environments files
 COPY --chown="${NB_USER}":"${NB_GID}" environments /home/${NB_USER}/environments
 
-## Create material folder and add JupyterLab Extensions
+
+## Permissions and JupyterLab Extensions
 # hadolint ignore=DL3016
-RUN mkdir /work/Material \
- && fix-permissions "/work/Material/" \
- && fix-permissions "/home/${NB_USER}" \
+RUN fix-permissions "/home/${NB_USER}" \
  && fix-permissions "${CONDA_DIR}" \
+ ##Install libGL-mesa
+ && apt-get update && apt-get install -y xxd libgl1-mesa-glx && apt-get clean \
  ## create conda environment(s)
  && mamba env create -f /home/"${NB_USER}"/environments/env_popgen_ngs.full.yml -p "${CONDA_DIR}"/envs/Course_Env \
  && mamba clean --all -f -y \
+ ## Install R package
+ && /opt/conda/envs/Course_Env/bin/R -e "install.packages('rehh', repos='http://cran.r-project.org')" \
  ## Setup for the IGV browser
  && npm install --global http-server \
  &&  git clone -b v1.12.9 https://github.com/igvteam/igv-webapp.git /usr/igv-webapp \
@@ -52,6 +55,10 @@ RUN printf "\nInstall JupyterLab extensions:\n" \
  && pip install --no-cache-dir "jupyter-dash" \
  && jupyter lab build -y \
  && jupyter lab clean -y
+
+## Executables
+COPY --chown="${NB_USER}":"${NB_GID}" ./Software /home/ucloud/Software
+RUN chmod -R 755 /home/ucloud/Software/
 
 ## Set startup script in the PATH
 COPY --chown="${NB_USER}":"${NB_GID}" start-jupyter "${CONDA_DIR}"/bin/
