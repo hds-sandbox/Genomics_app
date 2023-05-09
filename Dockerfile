@@ -24,7 +24,10 @@ RUN fix-permissions "/home/${NB_USER}" \
  && mamba env create -f /home/"${NB_USER}"/environments/env_popgen_ngs.full.yml -p "${CONDA_DIR}"/envs/Course_Env \
  && mamba clean --all -f -y \
  ## Install R package
- && /opt/conda/envs/Course_Env/bin/R -e "install.packages('rehh', repos='http://cran.r-project.org')" \
+ && eval "$(conda shell.bash hook)" \
+ && conda activate /opt/conda/envs/Course_Env \
+ && /opt/conda/envs/Course_Env/bin/R -e "install.packages('rehh', repos='http://cran.r-project.org', lib='/opt/conda/envs/Course_Env/lib/R/library/')" \
+ && conda deactivate \
  ## Setup for the IGV browser
  && npm install --global http-server \
  &&  git clone -b v1.12.9 https://github.com/igvteam/igv-webapp.git /usr/igv-webapp \
