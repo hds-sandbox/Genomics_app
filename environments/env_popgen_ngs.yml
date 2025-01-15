@@ -7,6 +7,8 @@ channels:
   - anaconda
   - grst
 dependencies:
+  - regenie
+  - jupyterlab
   - gcc_linux-64
   - python
   - bwa
@@ -71,24 +73,49 @@ dependencies:
   - r-pheatmap
   - bioconductor-mixomics
   - gffread
+  - cython
+  - scikit-image
+  - imageio
+  - tifffile
+  - charset-normalizer
+  - colorama
+  - idna
+  - pycparser
+  - pyopenssl
   - pip
   - pip:
-      - batchglm==0.7.4
-      - bbknn==1.5.1
-      - cython==0.29.30
-      - imageio==2.19.2
+      - batchglm #==0.7.4
+      - bbknn #==1.5.1
+#      - cython #==0.29.30
+#      - imageio #==2.19.2
       - robustbase==0.2.8
-      - scikit-image==0.19.2
-      - scrublet==0.2.3
-      - sparse==0.13.0
-      - tifffile==2022.5.4
-      - charset-normalizer==2.0.12
-      - colorama==0.4.4
-      - idna==3.3
-      - pycparser==2.21
-      - pyopenssl==22.0.0
-      - requests==2.27.1
-      - six==1.16.0
-      - tqdm==4.64.0
-      - urllib3==1.26.9
-      - wheel==0.37.1
+#      - scikit-image #==0.19.2
+      - scrublet #==0.2.3
+      - sparse #==0.13.0
+#      - tifffile #==2022.5.4
+#      - charset-normalizer #==2.0.12
+#      - colorama #==0.4.4
+#      - idna #==3.3
+#      - pycparser #==2.21
+#      - pyopenssl #==22.0.0
+      - requests #==2.27.1
+      - six #==1.16.0
+      - tqdm #==4.64.0
+      - urllib3 #==1.26.9
+      - wheel #==0.37.1
+      - nbconvert #jupyter plugins
+      - nteract-on-jupyter
+      - jupyterlab-topbar
+      - jupyterlab-topbar-text
+      - jupyterlab-system-monitor
+      - autopep8
+      - yapf
+      - isort 
+      - black
+      - jupyterlab_code_formatter
+      - jupyterlab-git
+      - jupyterlab-lsp
+      - jupyterlab-omnisci
+      - jupyterlab-spreadsheet
+      - jupyter_bokeh
+      - plotly

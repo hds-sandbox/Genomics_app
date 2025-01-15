@@ -1,70 +1,88 @@
-FROM dreg.cloud.sdu.dk/ucloud-apps/jupyter-base:3.6.1
+ARG BASE_IMAGE
+
+FROM $BASE_IMAGE
 
 MAINTAINER "Samuele Soraggi <samuele@birc.au.dk>"
 
 LABEL software="Genomics Sandbox" \
       author="Samuele Soraggi" \
-      version="2023.03.01" \
+      version="2025.02" \
       license="MIT" \
       description="Courses, datasets and software tools for genomics analysis"
 
-USER 0
+USER $USERID
+
+#ENV G_SLICE always-malloc
+      
+## Set shell
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 ## Environments files
-COPY --chown="${NB_USER}":"${NB_GID}" environments /home/${NB_USER}/environments
+COPY --chown="${NB_USER}":"${NB_GID}" environments /tmp/environments
 
 
 ## Permissions and JupyterLab Extensions
-# hadolint ignore=DL3016
-RUN fix-permissions "/home/${NB_USER}" \
- && fix-permissions "${CONDA_DIR}" \
- ##Install libGL-mesa
- && apt-get update && apt-get install -y xxd libgl1-mesa-glx && apt-get clean \
- ## create conda environment(s)
- && mamba env create -f /home/"${NB_USER}"/environments/env_popgen_ngs.full.yml -p "${CONDA_DIR}"/envs/Course_Env \
- && mamba clean --all -f -y \
- ## Install R package
- && eval "$(conda shell.bash hook)" \
- && conda activate /opt/conda/envs/Course_Env \
- && /opt/conda/envs/Course_Env/bin/R -e "install.packages('rehh', repos='http://cran.r-project.org', lib='/opt/conda/envs/Course_Env/lib/R/library/')" \
- && conda deactivate \
- ## Setup for the IGV browser
- && npm install --global http-server \
- &&  git clone -b v1.12.9 https://github.com/igvteam/igv-webapp.git /usr/igv-webapp \
- && fix-permissions /usr/igv-webapp \
- && npm install --prefix /usr/igv-webapp \
- && npm run --prefix /usr/igv-webapp build \
- && npm --force cache clean
+# hadolint ignore=DL3016 # 'libgl1-mesa-glx'
+RUN sudo apt-get update \ 
+&& sudo apt-get install --no-install-recommends -y xxd build-essential libjpeg9 libcurl4-openssl-dev libxml2-dev libssl-dev libicu-dev \
+&& sudo apt-get clean \
+&& sudo rm -rf /var/lib/apt/lists/* \
+&& sudo mkdir -p /opt/miniconda \
+&& sudo chown -R $USERID:$GROUPID /opt/miniconda \
+&& wget -q https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /opt/miniconda/miniconda.sh \
+&& bash /opt/miniconda/miniconda.sh -b -u -p /opt/miniconda \
+&& rm -rf /opt/miniconda/miniconda.sh \
+&& eval "$(/opt/miniconda/bin/conda shell.bash hook)" \
+&& conda config --set channel_priority flexible \
+&& conda install -n base --yes conda-libmamba-solver conda-forge::mamba \
+&& conda config --set solver libmamba \
+## create conda environment(s)
+&& conda env create -f /tmp/environments/env_popgen_ngs.yml -p /opt/miniconda/envs/Course_Env \
+&& conda clean --all -f -y \
+## Install R package
+&& eval "$(conda shell.bash hook)" \
+&& conda activate /opt/miniconda/envs/Course_Env \
+&& /opt/miniconda/envs/Course_Env/bin/R -e "install.packages('rehh', repos='http://cran.r-project.org', lib='/opt/conda/envs/Course_Env/lib/R/library/')" \
+&& conda deactivate \
+## Setup for the IGV browser
+&& npm install --global http-server \
+&& git clone -b master https://github.com/igvteam/igv-webapp.git /usr/igv-webapp \
+&& chmod -R 755 /usr/igv-webapp \
+&& npm install --prefix /usr/igv-webapp \
+&& npm run --prefix /usr/igv-webapp build \
+&& npm --force cache clean
 
-USER $NB_UID
 
-RUN printf "\nInstall JupyterLab extensions:\n" \
- && pip install --no-cache-dir --upgrade "pip" "setuptools" "wheel" \
- && pip install --no-cache-dir --upgrade "jupyter-server" "jupyter-server-terminals" \
- && pip install --no-cache-dir "nbconvert" \
- && pip install --no-cache-dir "nteract-on-jupyter" \
- ## add top bar
- && pip install --no-cache-dir "jupyterlab-topbar" \
- && pip install --no-cache-dir "jupyterlab-topbar-text" \
- ## add system monitor
- && pip install --no-cache-dir "jupyterlab-system-monitor" \
- ## add code formatter
- && pip install --no-cache-dir "autopep8" "yapf" "isort" "black" \
- && pip install --no-cache-dir "jupyterlab_code_formatter" \
- ## add Bokeh extension
- && pip install --no-cache-dir "jupyter_bokeh" \
- ## add Plotly extension
- && pip install --no-cache-dir  "plotly" \
- && pip install --no-cache-dir "jupyter-dash" \
- && jupyter lab build -y \
- && jupyter lab clean -y
+#RUN printf "\nInstall JupyterLab extensions:\n" \
+# && pip install --no-cache-dir --upgrade "pip" "setuptools" "wheel" \
+# && pip install --no-cache-dir --upgrade "jupyter-server" "jupyter-server-terminals" \
+# && pip install --no-cache-dir "nbconvert" \
+# && pip install --no-cache-dir "nteract-on-jupyter" \
+# ## add top bar
+# && pip install --no-cache-dir "jupyterlab-topbar" \
+# && pip install --no-cache-dir "jupyterlab-topbar-text" \
+# ## add system monitor
+# && pip install --no-cache-dir "jupyterlab-system-monitor" \
+# ## add code formatter
+# && pip install --no-cache-dir "autopep8" "yapf" "isort" "black" \
+# && pip install --no-cache-dir "jupyterlab_code_formatter" \
+### add Bokeh extension
+# && pip install --no-cache-dir "jupyter_bokeh" \
+# ## add Plotly extension
+# && pip install --no-cache-dir  "plotly" \
+# && pip install --no-cache-dir "jupyter-dash" \
+#&& jupyter lab build -y \
+#&& jupyter lab clean -y
 
 ## Executables
-COPY --chown="${NB_USER}":"${NB_GID}" ./Software /home/ucloud/Software
-RUN chmod -R 755 /home/ucloud/Software/
+COPY --chown=$USERID:$GROUPID ./Software ./Software
+RUN chmod -R 755 ./Software
 
 ## Set startup script in the PATH
-COPY --chown="${NB_USER}":"${NB_GID}" start-jupyter "${CONDA_DIR}"/bin/
-RUN chmod 755 "${CONDA_DIR}"/bin/start-jupyter
+## entrypoint script
+COPY --chown=$USERID:$GROUPID ./scripts/start-app /usr/bin/start-app
+
+RUN chmod 755 /usr/bin/start-app \
+    && sudo chown -R $USERID:$GROUPID /etc/rstudio/
 
 WORKDIR /work
