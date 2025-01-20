@@ -21,9 +21,11 @@ dependencies:
   - certifi
   - rpy2
   - ipykernel
+  - ipywidgets
   - minimap2
   - pandas
   - r-vcfr
+  - pydeseq2
   - vcftools
   - cxx-compiler
   - r-tidyr
@@ -48,7 +50,7 @@ dependencies:
   - gcta
   - admixture[version='1.3.0']
   - conda-pack
-  - bioconductor-edger==3.36
+  - bioconductor-edger
   - gsl
   - scanpy
   - python-igraph
@@ -66,7 +68,7 @@ dependencies:
   - multiqc
   - qualimap
   - minimap2
-  - r-base==4.1.2
+  - r-base
   - r-formattable
   - r-venndiagram
   - r-pheatmap
@@ -114,6 +116,4 @@ dependencies:
       - jupyterlab_code_formatter
       - jupyterlab-git
       - jupyterlab-lsp
-      - jupyterlab-omnisci
-      - jupyterlab-spreadsheet
       - jupyter_bokeh
