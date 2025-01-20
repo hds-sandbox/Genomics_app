@@ -2,23 +2,21 @@ ARG BASE_IMAGE
 
 FROM $BASE_IMAGE
 
-MAINTAINER "Samuele Soraggi <samuele@birc.au.dk>"
-
 LABEL software="Genomics Sandbox" \
-      author="Samuele Soraggi" \
+      author="Samuele Soraggi <samuele@birc.au.dk>" \
       version="2025.02" \
       license="MIT" \
       description="Courses, datasets and software tools for genomics analysis"
 
 USER $USERID
 
-#ENV G_SLICE always-malloc
+ENV G_SLICE=always-malloc
       
 ## Set shell
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 ## Environments files
-COPY --chown="${NB_USER}":"${NB_GID}" environments /tmp/environments
+COPY --chown=$USERID:$GROUPID environments /tmp/environments
 
 
 ## Permissions and JupyterLab Extensions
@@ -34,7 +32,7 @@ RUN sudo apt-get update \
 && rm -rf /opt/miniconda/miniconda.sh \
 && eval "$(/opt/miniconda/bin/conda shell.bash hook)" \
 && conda config --set channel_priority flexible \
-&& conda install -n base --yes conda-libmamba-solver conda-forge::mamba \
+&& conda install -n base --yes conda-libmamba-solver \
 && conda config --set solver libmamba \
 ## create conda environment(s)
 && conda env create -vv -f /tmp/environments/env_popgen_ngs.yml -p /opt/miniconda/envs/Course_Env \
@@ -42,7 +40,7 @@ RUN sudo apt-get update \
 ## Install R package
 && eval "$(conda shell.bash hook)" \
 && conda activate /opt/miniconda/envs/Course_Env \
-&& /opt/miniconda/envs/Course_Env/bin/R -e "install.packages('rehh', repos='http://cran.r-project.org', lib='/opt/conda/envs/Course_Env/lib/R/library/')" \
+&& /opt/miniconda/envs/Course_Env/bin/R -e "install.packages('rehh', repos='http://cran.r-project.org', lib='/opt/miniconda/envs/Course_Env/lib/R/library/')" \
 && conda deactivate \
 ## Setup for the IGV browser
 && npm install --global http-server \
