@@ -37,7 +37,7 @@ RUN sudo apt-get update \
 && conda install -n base --yes conda-libmamba-solver conda-forge::mamba \
 && conda config --set solver libmamba \
 ## create conda environment(s)
-&& conda env create -f /tmp/environments/env_popgen_ngs.yml -p /opt/miniconda/envs/Course_Env \
+&& conda env create -vv -f /tmp/environments/env_popgen_ngs.yml -p /opt/miniconda/envs/Course_Env \
 && conda clean --all -f -y \
 ## Install R package
 && eval "$(conda shell.bash hook)" \

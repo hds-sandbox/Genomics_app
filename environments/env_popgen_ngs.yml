@@ -1,4 +1,3 @@
----
 channels:
   - conda-forge
   - bioconda
@@ -118,4 +117,3 @@ dependencies:
       - jupyterlab-omnisci
       - jupyterlab-spreadsheet
       - jupyter_bokeh
-      - plotly
