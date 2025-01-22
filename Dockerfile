@@ -11,6 +11,8 @@ LABEL software="Genomics Sandbox" \
 USER $USERID
 
 ENV G_SLICE=always-malloc
+
+EXPOSE 8787
       
 ## Set shell
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
@@ -26,25 +28,30 @@ RUN sudo apt-get update \
 && sudo apt-get clean \
 && sudo rm -rf /var/lib/apt/lists/* \
 && curl -fsSL https://pixi.sh/install.sh | bash \
-&& echo "export PATH=\$PATH:/home/ucloud/.pixi/bin" >> /home/ucloud/.bashrc \
-&& echo 'eval "\$(pixi completion --shell bash)"' >> /home/ucloud/.bashrc \
+#&& echo "export PATH=\$PATH:/home/ucloud/.pixi/bin" >> /home/ucloud/.bashrc \
+#&& echo 'eval "\$(pixi completion --shell bash)"' >> /home/ucloud/.bashrc \
 && export PATH=$PATH:/home/ucloud/.pixi/bin && eval "$(pixi completion --shell bash)" \
 && sudo mkdir -p /opt/pixi/envs/Course_Env && sudo chown -R $USERID:$GROUPID /opt/pixi\
 && cd /opt/pixi/envs/Course_Env \
 && pixi init --import /tmp/environments/env_popgen_ngs_pixi.yml \
 && pixi install && pixi run /opt/pixi/envs/Course_Env/.pixi/envs/default/bin/pip install -r /tmp/environments/requirements_pixi.txt \
-&& pixi run R -e 'install.packages("rehh", repos="http://cran.r-project.org", lib="/opt/pixi/envs/Course_Env/.pixi/envs/default/lib/R/library")'
-##########
-RUN  sudo mkdir -p /opt/software && sudo chown -R $USERID:$GROUPID /opt/software \
-    && wget https://zenodo.org/records/14712777/files/bolt_2.4.1.zip?download=1 -O /opt/software/boltLMM.zip \
-    && unzip /opt/software/boltLMM.zip && rm /opt/software/boltLMM.zip \
-    && wget https://zenodo.org/records/14712871/files/gcta-1.94.3-linux-kernel-3-x86_64.zip?download=1 -O /opt/software/gcta.zip \
-    && unzip /opt/software/gcta.zip && rm /opt/software/gcta.zip \
-    && echo "export PATH=\$PATH:/opt/software/boltLMM:/opt/software/gcta-1.94.3-linux-kernel-3-x86_64" >> /home/ucloud/.bashrc 
+&& pixi run R -e "install.packages(\"rehh\", repos=\"http://cran.r-project.org\", lib=\"/opt/pixi/envs/Course_Env/.pixi/envs/default/lib/R/library\")"
 
 ## Executables
 COPY --chown=$USERID:$GROUPID ./Software ./Software
-RUN chmod -R 755 ./Software
+RUN chmod -R 755 ./Software && cd ./Software \
+    && wget https://zenodo.org/records/14712777/files/bolt_2.4.1.zip?download=1 -O boltLMM.zip \
+    && unzip boltLMM.zip -d boltLMM && rm boltLMM.zip \
+    && wget https://zenodo.org/records/14712871/files/gcta-1.94.3-linux-kernel-3-x86_64.zip?download=1 -O gcta.zip \
+    && unzip gcta.zip && mv gcta-1.94.3-linux-kernel-3-x86_64 gcta && rm gcta.zip \
+    && sudo chmod 755 -R /work/Software/ && cd .. \
+    && export PATH=$PATH:/home/ucloud/.pixi/bin && eval "$(pixi completion --shell bash)" \
+    && ln -s /opt/pixi/envs/Course_Env/.pixi && ln -s /opt/pixi/envs/Course_Env/pixi.toml \
+    #&& pixi shell-hook --shell bash >> ~/.bashrc \
+    && echo "export PATH=\$PATH:/work/Software/boltLMM:/work/Software/gcta" >> /home/ucloud/.bashrc \
+    && echo 'eval "$(pixi completion --shell bash)"' >> /home/ucloud/.bashrc 
+
+    
 
 ## Set startup script in the PATH
 ## entrypoint script

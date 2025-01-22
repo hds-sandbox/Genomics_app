@@ -8,6 +8,7 @@ channels:
 dependencies:
   - bioconda::regenie
   - conda-forge::jupyterlab
+  - conda-forge::terminado
   - conda-forge::gcc_linux-64
   - bioconda::bwa
   - bioconda::bcftools

@@ -2,6 +2,7 @@
 
 PORT_USER=8787
 COURSE_DIR=/tmp/course
+JUPYTER_KERNELS=/home/ucloud/.local/share/jupyter/kernels
 
 ## Options for the Transcriptomics Sandbox app
 while getopts c:f:p: option; do
@@ -16,6 +17,8 @@ while getopts c:f:p: option; do
 done
 
 
+export PATH=$PATH:/home/ucloud/.pixi/bin && eval "$(pixi completion --shell bash)"
+echo "SHELL=/bin/bash" >> ~/.bashrc
 
 printf "\n======================  "
 printf "\n== Selecting Module == \n"
@@ -38,35 +41,31 @@ then
     fi
 
     echo "----------> Installing course kernels on JupyterLab"
-    /opt/miniconda/envs/Course_Env/bin/python -m ipykernel install --user --name="ngs_python" --display-name "NGS (Python)"
-    /opt/miniconda/envs/Course_Env/bin/R -e "IRkernel::installspec(user=TRUE, name = 'ngs_r', displayname = 'NGS (R)')"
+    pixi run python -m ipykernel install --user --name="ngs_python" --display-name "NGS (Python)"
+    pixi run R -e "IRkernel::installspec(user=TRUE, name = \"ngs_r\", displayname = \"NGS (R)\")"
 
     
     git clone --depth 1 https://github.com/hds-sandbox/NGS_summer_course_Aarhus.git $COURSE_DIR
     # kernel configurations with updated $PATH included
-    cp /home/ucloud/course/Environments/kernel_py.json ~/.local/share/jupyter/kernels/ngs_python/kernel.json && \
-    cp /home/ucloud/course/Environments/kernel_R.json ~/.local/share/jupyter/kernels/ngs_r/kernel.json
+    #cp $COURSE_DIR/Environments/kernel_py.json $JUPYTER_KERNELS/ngs_python/kernel.json
+    #cp $COURSE_DIR/Environments/kernel_R.json $JUPYTER_KERNELS/ngs_r/kernel.json
 
     
-    mv $COURSE_DIR/Scripts 
+    mv $COURSE_DIR/Scripts .
 
     if [ ! -d "Notebooks" ]
     then
         echo "----------> copying course notebooks"
-        mv "${COURSE_DIR}"/Notebooks .
+        mv $COURSE_DIR/Notebooks .
     else
         echo "----------> notebooks already present"
     fi
-
-    #bashrc file for conda
-    echo 'eval "$(/opt/miniconda/bin/conda shell.bash hook)"'>>/home/ucloud/.bashrc   
-    echo 'conda activate /opt/miniconda/envs/Course_Env'>>/home/ucloud/.bashrc
 
     printf  "\n==================  "
     printf  "\n Start JupyterLab  \n"
     printf  "==================  \n\n"
 
-    SHELL=/bin/bash jupyter-lab --port=$PORT_USER --ip=0.0.0.0 --NotebookApp.token='' --no-browser
+    SHELL=/bin/bash pixi run jupyter-lab --port=$PORT_USER --ip=0.0.0.0 --NotebookApp.token='' --no-browser
 
 fi
 
@@ -86,9 +85,9 @@ then
     fi
 
     echo "----------> Installing course kernels on JupyterLab"
-    /opt/miniconda/envs/Course_Env/bin/python -m ipykernel install --user --name="args_dashboard" --display-name "args dashboard"
-    /opt/miniconda/envs/Course_Env/bin/R -e "IRkernel::installspec(user=TRUE, name = 'popgen_course', displayname = 'popgen course')"
-    /opt/miniconda/envs/Course_Env/bin/python -m bash_kernel.install
+    .pixi/envs/default/bin/python -m ipykernel install --user --name="args_dashboard" --display-name "args dashboard"
+    .pixi/envs/default/bin/R -e "IRkernel::installspec(user=TRUE, name = 'popgen_course', displayname = 'popgen course')"
+    .pixi/envs/default/bin/python -m bash_kernel.install
 
     git clone --branch ucloud --depth 1  https://github.com/hds-sandbox/PopulationGenomicsCourse.git $COURSE_DIR
 
@@ -101,17 +100,13 @@ then
     fi
 
     # kernel configurations with updated $PATH included
-    cp $COURSE_DIR/uCloud/Configurations/kernelBash.json ~/.local/share/jupyter/kernels/bash/kernel.json
-
-    #bashrc file for conda
-    echo 'eval "$(/opt/miniconda/bin/conda shell.bash hook)"'>>/home/ucloud/.bashrc   
-    echo 'conda activate /opt/miniconda/envs/Course_Env'>>/home/ucloud/.bashrc
+    cp $COURSE_DIR/uCloud/Configurations/kernelBash.json $JUPYTER_KERNELS/bash/kernel.json
 
     printf  "\n==================  "
     printf  "\n Start JupyterLab  \n"
     printf  "==================  \n\n"
 
-    SHELL=/bin/bash jupyter-lab --port=$PORT_USER --ip=0.0.0.0 --NotebookApp.token='' --no-browser
+    jupyter-lab --port=$PORT_USER --ip=0.0.0.0 --NotebookApp.token='' --no-browser
 
 fi
 
@@ -123,13 +118,13 @@ then
     mv $COURSE_DIR/Software .
 
     echo "----------> Installing course kernels on JupyterLab"
-    /opt/miniconda/envs/Course_Env/bin/python -m bash_kernel.install
-    /opt/miniconda/envs/Course_Env/Course_Env/bin/R -e "IRkernel::installspec(user=TRUE, name = 'rgwas', displayname = 'GWAS (R)')"
+    .pixi/envs/default/bin/python -m bash_kernel.install
+    .pixi/envs/default/bin/R -e "IRkernel::installspec(user=TRUE, name = 'rgwas', displayname = 'GWAS (R)')"
     
     if [ ! -d "Data" ]
     then
         echo "----------> copying data"
-        mv COURSE_DIR/Data .
+        mv $COURSE_DIR/Data .
     else
         echo "----------> data already present"
     fi
@@ -143,24 +138,20 @@ then
     fi
 
     # kernel configurations with updated $PATH included
-    cp /home/ucloud/course/uCloud/kernelBash.json ~/.local/share/jupyter/kernels/bash/kernel.json
-    
-    #bashrc file for conda
-    echo 'eval "$(/opt/miniconda/bin/conda shell.bash hook)"'>>/home/ucloud/.bashrc   
-    echo 'conda activate /opt/miniconda/envs/Course_Env'>>/home/ucloud/.bashrc
+    cp $COURSE_DIR/uCloud/kernelBash.json $JUPYTER_KERNELS/bash/kernel.json
 
     printf  "\n==================  "
     printf  "\n Start JupyterLab  \n"
     printf  "==================  \n\n"
 
-    SHELL=/bin/bash jupyter-lab --port=$PORT_USER --ip=0.0.0.0 --NotebookApp.token='' --no-browser
+    jupyter-lab --port=$PORT_USER --ip=0.0.0.0 --NotebookApp.token='' --no-browser
 
 fi
 
-if [ "${COURSE}" == "IGV" ]
-then
-    echo "-----> Chosen tool: Interactive Genomic Browser"
-    export IGV_DATA_PATH="/work"
-    cd /usr/igv-webapp || exit
-    npx http-server --port "${PORT_USER}" -a 0.0.0.0 dist
-fi
+#if [ "${COURSE}" == "IGV" ]
+#then
+#    echo "-----> Chosen tool: Interactive Genomic Browser"
+#    export IGV_DATA_PATH="/work"
+#    cd /usr/igv-webapp || exit
+#    npx http-server --port "${PORT_USER}" -a 0.0.0.0 dist
+#fi
