@@ -21,3 +21,6 @@ jupyterlab-code-formatter
 jupyterlab-git
 jupyterlab-lsp
 jupyter_bokeh
+jupyterquiz
+jupyterlab-quarto
+nbconvert[webpdf]

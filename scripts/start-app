@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/work/.pixi/envs/default/bin/bash
 
 PORT_USER=8787
 COURSE_DIR=/tmp/course
@@ -8,17 +8,16 @@ JUPYTER_KERNELS=/home/ucloud/.local/share/jupyter/kernels
 while getopts c:f:p: option; do
     case "${option}" in
     c) COURSE=${OPTARG} ;;
-    p) PORT_USER=${OPTARG} ;; # not needed on ucloud!!!
-    \?)                          ## Invalid option
+    p) PORT_USER=${OPTARG} ;; # needed only for general use out of ucloud
+    \?)                       # Invalid option
         printf "Error: invalid option.\n\n"
         exit
         ;;
     esac
 done
 
-
+#Initialize Pixi
 export PATH=$PATH:/home/ucloud/.pixi/bin && eval "$(pixi completion --shell bash)"
-echo "SHELL=/bin/bash" >> ~/.bashrc
 
 printf "\n======================  "
 printf "\n== Selecting Module == \n"
@@ -45,11 +44,13 @@ then
     pixi run R -e "IRkernel::installspec(user=TRUE, name = \"ngs_r\", displayname = \"NGS (R)\")"
 
     
-    git clone --depth 1 https://github.com/hds-sandbox/NGS_summer_course_Aarhus.git $COURSE_DIR
-    # kernel configurations with updated $PATH included
-    #cp $COURSE_DIR/Environments/kernel_py.json $JUPYTER_KERNELS/ngs_python/kernel.json
-    #cp $COURSE_DIR/Environments/kernel_R.json $JUPYTER_KERNELS/ngs_r/kernel.json
+    for KERNEL in `find ~/.local/share/jupyter/kernels/ -name kernel.json`
+    do 
+        echo "----------> Editing $KERNEL"
+        jq '. + {"env": {"PATH":"/opt/pixi/envs/Course_Env/.pixi/envs/default/bin/:/opt/pixi/envs/Course_Env/.pixi/envs/default/bin/libexec:$PATH"}}' $KERNEL > tmp.$$.json && mv tmp.$$.json $KERNEL
+    done
 
+    git clone --depth 1 https://github.com/hds-sandbox/NGS_summer_course_Aarhus.git $COURSE_DIR
     
     mv $COURSE_DIR/Scripts .
 
@@ -65,7 +66,9 @@ then
     printf  "\n Start JupyterLab  \n"
     printf  "==================  \n\n"
 
-    SHELL=/bin/bash pixi run jupyter-lab --port=$PORT_USER --ip=0.0.0.0 --NotebookApp.token='' --no-browser
+    SHELL=.pixi/envs/default/bin/bash pixi run jupyter-lab --port=$PORT_USER --ip=0.0.0.0 --NotebookApp.token='' --no-browser
+
+
 
 fi
 
@@ -89,6 +92,12 @@ then
     .pixi/envs/default/bin/R -e "IRkernel::installspec(user=TRUE, name = 'popgen_course', displayname = 'popgen course')"
     .pixi/envs/default/bin/python -m bash_kernel.install
 
+    for KERNEL in `find ~/.local/share/jupyter/kernels/ -name kernel.json`
+    do 
+        echo "----------> Editing $KERNEL"
+        jq '. + {"env": {"PATH":"/opt/pixi/envs/Course_Env/.pixi/envs/default/bin/:/opt/pixi/envs/Course_Env/.pixi/envs/default/bin/libexec:$PATH"}}' $KERNEL > tmp.$$.json && mv tmp.$$.json $KERNEL
+    done    
+
     git clone --branch ucloud --depth 1  https://github.com/hds-sandbox/PopulationGenomicsCourse.git $COURSE_DIR
 
     if [ ! -d "Notebooks" ]
@@ -99,14 +108,11 @@ then
         echo "----------> notebooks already present"
     fi
 
-    # kernel configurations with updated $PATH included
-    cp $COURSE_DIR/uCloud/Configurations/kernelBash.json $JUPYTER_KERNELS/bash/kernel.json
-
     printf  "\n==================  "
     printf  "\n Start JupyterLab  \n"
     printf  "==================  \n\n"
 
-    jupyter-lab --port=$PORT_USER --ip=0.0.0.0 --NotebookApp.token='' --no-browser
+    SHELL=.pixi/envs/default/bin/bash jupyter-lab --port=$PORT_USER --ip=0.0.0.0 --NotebookApp.token='' --no-browser
 
 fi
 
@@ -120,6 +126,12 @@ then
     echo "----------> Installing course kernels on JupyterLab"
     .pixi/envs/default/bin/python -m bash_kernel.install
     .pixi/envs/default/bin/R -e "IRkernel::installspec(user=TRUE, name = 'rgwas', displayname = 'GWAS (R)')"
+
+    for KERNEL in `find ~/.local/share/jupyter/kernels/ -name kernel.json`
+    do 
+        echo "----------> Editing $KERNEL"
+        jq '. + {"env": {"PATH":"/opt/pixi/envs/Course_Env/.pixi/envs/default/bin/:/opt/pixi/envs/Course_Env/.pixi/envs/default/bin/libexec:$PATH"}}' $KERNEL > tmp.$$.json && mv tmp.$$.json $KERNEL
+    done  
     
     if [ ! -d "Data" ]
     then
@@ -137,21 +149,10 @@ then
         echo "----------> notebooks already present"
     fi
 
-    # kernel configurations with updated $PATH included
-    cp $COURSE_DIR/uCloud/kernelBash.json $JUPYTER_KERNELS/bash/kernel.json
-
     printf  "\n==================  "
     printf  "\n Start JupyterLab  \n"
     printf  "==================  \n\n"
 
-    jupyter-lab --port=$PORT_USER --ip=0.0.0.0 --NotebookApp.token='' --no-browser
+    SHELL=.pixi/envs/default/bin/bash jupyter-lab --port=$PORT_USER --ip=0.0.0.0 --NotebookApp.token='' --no-browser
 
 fi
-
-#if [ "${COURSE}" == "IGV" ]
-#then
-#    echo "-----> Chosen tool: Interactive Genomic Browser"
-#    export IGV_DATA_PATH="/work"
-#    cd /usr/igv-webapp || exit
-#    npx http-server --port "${PORT_USER}" -a 0.0.0.0 dist
-#fi
