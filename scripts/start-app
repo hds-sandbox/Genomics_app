@@ -3,11 +3,15 @@
 PORT_USER=8787
 COURSE_DIR=/tmp/course
 JUPYTER_KERNELS=/home/ucloud/.local/share/jupyter/kernels
+PIXI_ENV=/work/.pixi/envs/default
 
-## Options for the Transcriptomics Sandbox app
+##########################
+##### Script options
+##########################
+
 while getopts c:f:p: option; do
     case "${option}" in
-    c) COURSE=${OPTARG} ;;
+    c) COURSE=${OPTARG} ;;    # Course to start
     p) PORT_USER=${OPTARG} ;; # needed only for general use out of ucloud
     \?)                       # Invalid option
         printf "Error: invalid option.\n\n"
@@ -16,12 +20,25 @@ while getopts c:f:p: option; do
     esac
 done
 
+#########################
+#####General setup
+#########################
+
+# Setup resource usage in topbar for jupyterlab
+sed -i 's/"default": false/"default": true/g' $PIXI_ENV/share/jupyter/labextensions/@jupyter-server/resource-usage/schemas/@jupyter-server/resource-usage/topbar-item.json
+
 #Initialize Pixi
 export PATH=$PATH:/home/ucloud/.pixi/bin && eval "$(pixi completion --shell bash)"
+
+
 
 printf "\n======================  "
 printf "\n== Selecting Module == \n"
 printf "======================  \n\n"
+
+#########################
+##### intro to NGS course
+#########################
 
 if [ "${COURSE}" == "Intro_to_NGS" ]
 then
@@ -66,11 +83,21 @@ then
     printf  "\n Start JupyterLab  \n"
     printf  "==================  \n\n"
 
-    SHELL=.pixi/envs/default/bin/bash pixi run jupyter-lab --port=$PORT_USER --ip=0.0.0.0 --NotebookApp.token='' --no-browser
-
-
+    SHELL=/work/.pixi/envs/default/bin/bash pixi run jupyter-lab \
+                                                        --port=$PORT_USER \
+                                                        --ip=0.0.0.0  \
+                                                        --NotebookApp.token='' \
+                                                        --no-browser \
+                                                        --ResourceUseDisplay.track_cpu_percent=True \
+                                                        --ResourceUseDisplay.track_disk_usage=True \
+                                                        --ResourceUseDisplay.enable_prometheus_metrics=False \
+                                                        --ContentsManager.allow_hidden=True
 
 fi
+
+##########################
+##### Popgen Aarhus Course
+##########################
 
 if [ "${COURSE}" == "Intro_to_PopGen" ]
 then
@@ -112,9 +139,20 @@ then
     printf  "\n Start JupyterLab  \n"
     printf  "==================  \n\n"
 
-    SHELL=.pixi/envs/default/bin/bash jupyter-lab --port=$PORT_USER --ip=0.0.0.0 --NotebookApp.token='' --no-browser
-
+    SHELL=/work/.pixi/envs/default/bin/bash pixi run jupyter-lab \
+                                                        --port=$PORT_USER \
+                                                        --ip=0.0.0.0  \
+                                                        --NotebookApp.token='' \
+                                                        --no-browser \
+                                                        --ResourceUseDisplay.track_cpu_percent=True \
+                                                        --ResourceUseDisplay.track_disk_usage=True \
+                                                        --ResourceUseDisplay.enable_prometheus_metrics=False \
+                                                        --ContentsManager.allow_hidden=True
 fi
+
+##########################
+##### Intro to GWAS course
+##########################
 
 if [ "${COURSE}" == "Intro_to_GWAS" ]
 then
@@ -153,6 +191,14 @@ then
     printf  "\n Start JupyterLab  \n"
     printf  "==================  \n\n"
 
-    SHELL=.pixi/envs/default/bin/bash jupyter-lab --port=$PORT_USER --ip=0.0.0.0 --NotebookApp.token='' --no-browser
+     SHELL=/work/.pixi/envs/default/bin/bash pixi run jupyter-lab \
+                                                        --port=$PORT_USER \
+                                                        --ip=0.0.0.0  \
+                                                        --NotebookApp.token='' \
+                                                        --no-browser \
+                                                        --ResourceUseDisplay.track_cpu_percent=True \
+                                                        --ResourceUseDisplay.track_disk_usage=True \
+                                                        --ResourceUseDisplay.enable_prometheus_metrics=False \
+                                                        --ContentsManager.allow_hidden=True
 
 fi

@@ -10,8 +10,6 @@ LABEL software="Genomics Sandbox" \
 
 USER $USERID
 
-ENV G_SLICE=always-malloc
-
 EXPOSE 8787
       
 ## Set shell

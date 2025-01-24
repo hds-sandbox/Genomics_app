@@ -5,10 +5,10 @@ channels:
   - anaconda
   - plotly
   - grst
+  - gwforg
 dependencies:
   - bioconda::regenie
   - conda-forge::jupyterlab
-  - conda-forge::terminado
   - conda-forge::gcc_linux-64
   - bioconda::bwa
   - bioconda::bcftools
@@ -28,6 +28,8 @@ dependencies:
   - conda-forge::r-vcfr
   - bioconda::vcftools
   - conda-forge::cxx-compiler
+  - bioconda::snakemake
+  - conda-forge::nodejs
   - conda-forge::r-tidyr
   - bioconda::bioconductor-snprelate
   - bioconda::psmc
@@ -35,6 +37,8 @@ dependencies:
   - conda-forge::gnuplot
   - conda-forge::bash_kernel
   - bioconda::plink
+  - bioconda::nextflow
+  - gwforg::gwf
   - conda-forge::r-data.table
   - conda-forge::r-gridextra
   - conda-forge::r-cowplot
@@ -53,6 +57,8 @@ dependencies:
   - bioconda::bioconductor-edger
   - conda-forge::gsl
   - conda-forge::scanpy
+  - bioconda::harmonypy
+  - bioconda::bbknn
   - conda-forge::python-igraph
   - conda-forge::leidenalg
   - conda-forge::python-annoy
@@ -87,3 +93,7 @@ dependencies:
   - liblapack
   - readline
   - rpy2
+  - conda-forge::jupyter-lsp
+  - conda-forge::jupyter-lsp-r
+  - conda-forge::jupyter-lsp-python
+  - conda-forge::jupyter-lsp-latex

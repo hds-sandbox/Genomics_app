@@ -9,9 +9,10 @@ jobs:
   build-and-push:
     runs-on: ubuntu-latest
 
-    env:
+    env: 
         # Define environment variables here
         BASE_IMAGE: dreg.cloud.sdu.dk/ucloud-apps/rstudio:4.4.2
+        APP_NAME: genomicsapp
 
     steps:
       - name: Checkout repository
@@ -45,7 +46,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKER_ORG }}/genomicsapp:${{ secrets.DOCKER_TAG }}
+          tags: ${{ secrets.DOCKER_ORG }}/${{ env.APP_NAME }}:${{ secrets.DOCKER_TAG }}
           build-args: |
             BASE_IMAGE=${{ env.BASE_IMAGE }}
             GITHUB_PAT=${{ secrets.PAT_GITHUB }}
@@ -54,5 +55,5 @@ jobs:
           ##Contrary to the inline cache, the registry cache supports caching of intermediate layers in a multi-stage Docker build when configured with mode=max . This increases the chances of cache hits on subsequent builds.
           ##It also supports a host of options to control compression type, levels, and naming of the cache image etc. At the cost of some additional complexity to set up, this is the best-in-class caching solution for Docker builds.
           ##From https://www.blacksmith.sh/blog/cache-is-king-a-guide-for-docker-layer-caching-in-github-actions
-          cache-from: type=registry,ref=hdssandbox/app:buildcache
-          cache-to: type=registry,ref=hdssandbox/app:buildcache,mode=max
+          cache-from: type=registry,ref=hdssandbox/${{ env.APP_NAME }}:buildcache
+          cache-to: type=registry,ref=hdssandbox/${{ env.APP_NAME }}:buildcache,mode=max

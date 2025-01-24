@@ -1,7 +1,7 @@
 scvelo
 pydeseq2
 batchglm #==0.7.4
-bbknn==1.5.1
+#bbknn==1.6.0
 robustbase==0.2.8
 scrublet==0.2.3
 sparse #==0.13.0
@@ -10,17 +10,15 @@ six #==1.16.0
 tqdm #==4.64.0
 urllib3 #==1.26.9
 wheel #==0.37.1
-nbconvert #### jupyter plugins
 jupyter-resource-usage
-jupyterlab-topbar-text
 autopep8
 yapf
 isort 
 black
 jupyterlab-code-formatter
 jupyterlab-git
-jupyterlab-lsp
 jupyter_bokeh
 jupyterquiz
 jupyterlab-quarto
 nbconvert[webpdf]
+doubletdetection
