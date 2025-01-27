@@ -2,8 +2,9 @@
 
 PORT_USER=8787
 COURSE_DIR=/tmp/course
-JUPYTER_KERNELS=/home/ucloud/.local/share/jupyter/kernels
-PIXI_ENV=/work/.pixi/envs/default
+export PIXI_ENV=/opt/pixi/envs/Course_Env/.pixi/envs/default
+JUPYTER_KERNELS=$PIXI_ENV/share/jupyter/kernels
+CURR_DIR=`pwd`
 
 ##########################
 ##### Script options
@@ -28,22 +29,32 @@ done
 sed -i 's/"default": false/"default": true/g' $PIXI_ENV/share/jupyter/labextensions/@jupyter-server/resource-usage/schemas/@jupyter-server/resource-usage/topbar-item.json
 
 #Initialize Pixi
-export PATH=$PATH:/home/ucloud/.pixi/bin && eval "$(pixi completion --shell bash)"
+cd /work/ && export PATH=$PATH:/home/ucloud/.pixi/bin && eval "$(pixi completion --shell bash)"
 
 
+#Course kernels setup for executables
+echo "-----> Mapping course kernels on JupyterLab"
+for KERNEL in `find $JUPYTER_KERNELS -name kernel.json`
+do 
+    echo "----------> Mapping $KERNEL"
+    jq '. + {"env": {"PATH":"$PIXI_ENV/bin/:$PIXI_ENV/libexec:$PATH"}}' $KERNEL > tmp.$$.json && mv tmp.$$.json $KERNEL
+done
 
 printf "\n======================  "
 printf "\n== Selecting Module == \n"
 printf "======================  \n\n"
 
+cd $CURR_DIR
+
 #########################
 ##### intro to NGS course
 #########################
-
 if [ "${COURSE}" == "Intro_to_NGS" ]
 then
+
     echo "-----> Chosen course: Introduction to NGS data"
 
+    #Checking for course material
     if [ ! -d "Data" ]
     then
         echo "----------> downloading data"
@@ -55,21 +66,19 @@ then
     else
         echo "----------> data already present"
     fi
-
-    echo "----------> Installing course kernels on JupyterLab"
-    pixi run python -m ipykernel install --user --name="ngs_python" --display-name "NGS (Python)"
-    pixi run R -e "IRkernel::installspec(user=TRUE, name = \"ngs_r\", displayname = \"NGS (R)\")"
-
     
-    for KERNEL in `find ~/.local/share/jupyter/kernels/ -name kernel.json`
-    do 
-        echo "----------> Editing $KERNEL"
-        jq '. + {"env": {"PATH":"/opt/pixi/envs/Course_Env/.pixi/envs/default/bin/:/opt/pixi/envs/Course_Env/.pixi/envs/default/bin/libexec:$PATH"}}' $KERNEL > tmp.$$.json && mv tmp.$$.json $KERNEL
-    done
-
-    git clone --depth 1 https://github.com/hds-sandbox/NGS_summer_course_Aarhus.git $COURSE_DIR
+    if [[ ! -d "Notebooks" || ! -d "Scripts" ]]
+    then
+    	git clone --depth 1 https://github.com/hds-sandbox/NGS_summer_course_Aarhus.git $COURSE_DIR
+    fi
     
-    mv $COURSE_DIR/Scripts .
+    if [ ! -d "Scripts" ]
+    then
+        echo "----------> copying course notebooks"
+        mv $COURSE_DIR/Scripts .
+    else
+        echo "----------> scripts already present"
+    fi
 
     if [ ! -d "Notebooks" ]
     then
@@ -83,16 +92,18 @@ then
     printf  "\n Start JupyterLab  \n"
     printf  "==================  \n\n"
 
-    SHELL=/work/.pixi/envs/default/bin/bash pixi run jupyter-lab \
+    cd /work
+    SHELL=/work/.pixi/envs/default/bin/bash pixi run jupyter-lab --allow-root \
                                                         --port=$PORT_USER \
                                                         --ip=0.0.0.0  \
                                                         --NotebookApp.token='' \
-                                                        --no-browser \
                                                         --ResourceUseDisplay.track_cpu_percent=True \
                                                         --ResourceUseDisplay.track_disk_usage=True \
                                                         --ResourceUseDisplay.enable_prometheus_metrics=False \
-                                                        --ContentsManager.allow_hidden=True
-
+                                                        --ContentsManager.allow_hidden=True \
+							                            --ServerApp.root_dir=$CURR_DIR \
+                                                        --browser='firefox'
+							
 fi
 
 ##########################
@@ -101,7 +112,9 @@ fi
 
 if [ "${COURSE}" == "Intro_to_PopGen" ]
 then
+
     echo "-----> Chosen course: Intro to population Genetics"
+    #Checking for course material
 
     if [ ! -d "Data" ]
     then
@@ -114,21 +127,9 @@ then
         echo "----------> data already present"
     fi
 
-    echo "----------> Installing course kernels on JupyterLab"
-    .pixi/envs/default/bin/python -m ipykernel install --user --name="args_dashboard" --display-name "args dashboard"
-    .pixi/envs/default/bin/R -e "IRkernel::installspec(user=TRUE, name = 'popgen_course', displayname = 'popgen course')"
-    .pixi/envs/default/bin/python -m bash_kernel.install
-
-    for KERNEL in `find ~/.local/share/jupyter/kernels/ -name kernel.json`
-    do 
-        echo "----------> Editing $KERNEL"
-        jq '. + {"env": {"PATH":"/opt/pixi/envs/Course_Env/.pixi/envs/default/bin/:/opt/pixi/envs/Course_Env/.pixi/envs/default/bin/libexec:$PATH"}}' $KERNEL > tmp.$$.json && mv tmp.$$.json $KERNEL
-    done    
-
-    git clone --branch ucloud --depth 1  https://github.com/hds-sandbox/PopulationGenomicsCourse.git $COURSE_DIR
-
     if [ ! -d "Notebooks" ]
     then
+        git clone --branch ucloud --depth 1  https://github.com/hds-sandbox/PopulationGenomicsCourse.git $COURSE_DIR
         echo "----------> copying course notebooks"
         mv $COURSE_DIR/Notebooks .
     else
@@ -139,15 +140,18 @@ then
     printf  "\n Start JupyterLab  \n"
     printf  "==================  \n\n"
 
-    SHELL=/work/.pixi/envs/default/bin/bash pixi run jupyter-lab \
+    cd /work
+    SHELL=/work/.pixi/envs/default/bin/bash pixi run jupyter-lab --allow-root \
                                                         --port=$PORT_USER \
                                                         --ip=0.0.0.0  \
                                                         --NotebookApp.token='' \
-                                                        --no-browser \
                                                         --ResourceUseDisplay.track_cpu_percent=True \
                                                         --ResourceUseDisplay.track_disk_usage=True \
                                                         --ResourceUseDisplay.enable_prometheus_metrics=False \
-                                                        --ContentsManager.allow_hidden=True
+                                                        --ContentsManager.allow_hidden=True \
+							                            --ServerApp.root_dir=$CURR_DIR \
+                                                        --browser='firefox'
+
 fi
 
 ##########################
@@ -156,21 +160,13 @@ fi
 
 if [ "${COURSE}" == "Intro_to_GWAS" ]
 then
+
     echo "-----> Chosen course: Intro to GWAS"
 
     git clone --depth 1  https://github.com/hds-sandbox/GWAS_course.git $COURSE_DIR
-    mv $COURSE_DIR/Software .
+    mv $COURSE_DIR/Software/* $PIXI_ENV/bin/
 
-    echo "----------> Installing course kernels on JupyterLab"
-    .pixi/envs/default/bin/python -m bash_kernel.install
-    .pixi/envs/default/bin/R -e "IRkernel::installspec(user=TRUE, name = 'rgwas', displayname = 'GWAS (R)')"
 
-    for KERNEL in `find ~/.local/share/jupyter/kernels/ -name kernel.json`
-    do 
-        echo "----------> Editing $KERNEL"
-        jq '. + {"env": {"PATH":"/opt/pixi/envs/Course_Env/.pixi/envs/default/bin/:/opt/pixi/envs/Course_Env/.pixi/envs/default/bin/libexec:$PATH"}}' $KERNEL > tmp.$$.json && mv tmp.$$.json $KERNEL
-    done  
-    
     if [ ! -d "Data" ]
     then
         echo "----------> copying data"
@@ -191,14 +187,16 @@ then
     printf  "\n Start JupyterLab  \n"
     printf  "==================  \n\n"
 
-     SHELL=/work/.pixi/envs/default/bin/bash pixi run jupyter-lab \
+    cd /work
+    SHELL=/work/.pixi/envs/default/bin/bash pixi run jupyter-lab --allow-root \
                                                         --port=$PORT_USER \
                                                         --ip=0.0.0.0  \
                                                         --NotebookApp.token='' \
-                                                        --no-browser \
                                                         --ResourceUseDisplay.track_cpu_percent=True \
                                                         --ResourceUseDisplay.track_disk_usage=True \
                                                         --ResourceUseDisplay.enable_prometheus_metrics=False \
-                                                        --ContentsManager.allow_hidden=True
+                                                        --ContentsManager.allow_hidden=True \
+							                            --ServerApp.root_dir=$CURR_DIR \
+                                                        --browser='firefox'
 
 fi

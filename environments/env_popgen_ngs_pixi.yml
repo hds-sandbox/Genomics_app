@@ -8,6 +8,7 @@ channels:
   - gwforg
 dependencies:
   - bioconda::regenie
+  - conda-forge::firefox
   - conda-forge::jupyterlab
   - conda-forge::gcc_linux-64
   - bioconda::bwa

@@ -1,0 +1,109 @@
+#!/bin/bash
+
+# An interactive menu to make the genomics app to start from the genomeDK interactive desktop
+# This script will:
+# 1. Ask the user to select a course from a dropdown menu
+# 2. Ask the user to select a folder where the course material will be saved
+# 3. Ask the user to select the genomics app file in format .SIF
+# 4. Ask the user to confirm the course and folder selection
+# 5. Run the software with the selected course and folder
+
+source ~/.bashrc
+
+zenity --info \
+  --title="Folder Selection" \
+  --text="$http_proxy $https_proxy $UID $SHELL" \
+  --width=300 
+
+# List of course names for the dropdown menu
+COURSES=("Intro_to_NGS" "Intro_to_GWAS" "Intro_to_Popgen")
+
+# Convert the courses array into a |-separated string for zenity
+COURSE_OPTIONS=$(printf "|%s" "${COURSES[@]}")
+COURSE_OPTIONS=${COURSE_OPTIONS:1}
+
+# Step 1: Show dropdown menu to select the course
+COURSE=$(zenity --list \
+  --title="Select a Course" \
+  --text="Choose a course from the list:" \
+  --column="Courses" \
+  ${COURSES[@]} \
+  --height=250 \
+  --width=300)
+
+# Check if the user canceled
+if [[ -z "$COURSE" ]]; then
+  zenity --error --text="No course selected. Exiting."
+  exit 1
+fi
+
+# Step 2: Show an informational message before folder selection
+zenity --info \
+  --title="Folder Selection" \
+  --text="Please choose a folder where the course material will be saved." \
+  --width=300
+
+# Step 3: File browser to choose the folder with a smaller window
+FOLDER=$(zenity --file-selection \
+  --title="Select a Folder" \
+  --directory \
+  --width=500 \
+  --height=400)
+  
+# Check if the user canceled
+if [[ -z "$FOLDER" ]]; then
+  zenity --error --text="No folder selected. Exiting."
+  exit 1
+fi
+
+# Step 4: Confirmation dialog before running the software
+zenity --question \
+  --text="You selected:\n\nCourse: $COURSE\nFolder: $FOLDER\n\nDo you want to proceed?" \
+  --width=300
+
+if [[ $? -ne 0 ]]; then
+  zenity --info --text="Operation canceled. Exiting."
+  exit 1
+fi
+  
+# Step 2: Show an informational message before folder selection
+zenity --info \
+  --title="Container selection" \
+  --text="Please choose the genomicsapp file in format .SIF - If none is chosen, the app will be download in the chosen folder." \
+  --width=300
+
+# Step 3: File browser to choose the folder with a smaller window
+SIF_FILE=$(zenity --file-selection \
+  --title="Select a Folder" \
+  --width=500 \
+  --height=400)
+
+# Check if the user canceled
+if [[ -z "$SIF_FILE" ]]; then
+  zenity --info \
+  --title="SIF file to be downloaded" \
+  --text="i will download the genomics app here: $FOLDER/genomicsapp_latest.sif. Please wait!" \
+  --width=300
+  
+  xfce4-terminal --command="singularity pull $FOLDER/genomicsapp_latest.sif docker docker://hdssandbox/genomicsapp:latest" 
+  
+  zenity --info \
+  --title="Finished" \
+  --text="Download of $FOLDER/genomicsapp_latest.sif completed!" \
+  --width=300
+fi
+
+# Step 4: Confirmation dialog before running the software
+zenity --question \
+  --text="You selected the app $SIF_FILE" \
+  --width=300
+
+# Step 2: Show an informational message before folder selection
+zenity --info \
+  --title="Start" \
+  --text="The course will open in a terminal - You should see some green text in the terminal when things are up and running. Then open the browser and go to the address localhost:$UID " \
+  --width=300
+
+# Step 5: Execute the command to launch the software
+# Replace `your_command` with the command you want to run
+eval ' xfce4-terminal -H --default-working-directory=$FOLDER --command="srun --mem=4g --cores=1 --time=00:02:0 --account=HDSSandbox --pty singularity exec --writable-tmpfs --fakeroot --env https_proxy=$https_proxy --env http_proxy=$http_proxy --bind /tmp:/tmp --bind $(pwd):$(pwd) --pwd $(pwd) --bind /etc/ssl/certs:/etc/ssl/certs --bind /etc/pki/ca-trust:/etc/pki/ca-trust --bind /home/samuele/Desktop/start-app:/bin/start-app $SIF_FILE start-app -c \"Intro_to_GWAS\" -p $UID " '
