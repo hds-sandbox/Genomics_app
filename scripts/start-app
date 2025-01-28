@@ -96,13 +96,12 @@ then
     SHELL=/work/.pixi/envs/default/bin/bash pixi run jupyter-lab --allow-root \
                                                         --port=$PORT_USER \
                                                         --ip=0.0.0.0  \
-                                                        --NotebookApp.token='' \
+                                                        --ServerApp.token='' \
                                                         --ResourceUseDisplay.track_cpu_percent=True \
                                                         --ResourceUseDisplay.track_disk_usage=True \
                                                         --ResourceUseDisplay.enable_prometheus_metrics=False \
                                                         --ContentsManager.allow_hidden=True \
-							                            --ServerApp.root_dir=$CURR_DIR \
-                                                        --browser='firefox'
+							                            --ServerApp.root_dir=$CURR_DIR
 							
 fi
 
@@ -144,13 +143,12 @@ then
     SHELL=/work/.pixi/envs/default/bin/bash pixi run jupyter-lab --allow-root \
                                                         --port=$PORT_USER \
                                                         --ip=0.0.0.0  \
-                                                        --NotebookApp.token='' \
+                                                        --ServerApp.token='' \
                                                         --ResourceUseDisplay.track_cpu_percent=True \
                                                         --ResourceUseDisplay.track_disk_usage=True \
                                                         --ResourceUseDisplay.enable_prometheus_metrics=False \
                                                         --ContentsManager.allow_hidden=True \
-							                            --ServerApp.root_dir=$CURR_DIR \
-                                                        --browser='firefox'
+							                            --ServerApp.root_dir=$CURR_DIR
 
 fi
 
@@ -162,10 +160,12 @@ if [ "${COURSE}" == "Intro_to_GWAS" ]
 then
 
     echo "-----> Chosen course: Intro to GWAS"
-
-    git clone --depth 1  https://github.com/hds-sandbox/GWAS_course.git $COURSE_DIR
-    mv $COURSE_DIR/Software/* $PIXI_ENV/bin/
-
+    
+    #Checking for course material
+    if [[ ! -d "Notebooks" || ! -d "Data" ]]
+    then
+    	git clone --depth 1  https://github.com/hds-sandbox/GWAS_course.git $COURSE_DIR
+    fi
 
     if [ ! -d "Data" ]
     then
@@ -191,12 +191,11 @@ then
     SHELL=/work/.pixi/envs/default/bin/bash pixi run jupyter-lab --allow-root \
                                                         --port=$PORT_USER \
                                                         --ip=0.0.0.0  \
-                                                        --NotebookApp.token='' \
+                                                        --ServerApp.token='' \
                                                         --ResourceUseDisplay.track_cpu_percent=True \
                                                         --ResourceUseDisplay.track_disk_usage=True \
                                                         --ResourceUseDisplay.enable_prometheus_metrics=False \
                                                         --ContentsManager.allow_hidden=True \
-							                            --ServerApp.root_dir=$CURR_DIR \
-                                                        --browser='firefox'
+							                            --ServerApp.root_dir=$CURR_DIR
 
 fi

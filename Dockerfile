@@ -36,11 +36,15 @@ RUN sudo apt-get update \
 && cd /work && chmod -R 755 ./Software && cd ./Software \
 && wget https://zenodo.org/records/14712777/files/bolt_2.4.1.zip?download=1 -O boltLMM.zip \
 && unzip boltLMM.zip -d boltLMM && rm boltLMM.zip \
+&& git clone --depth 1  https://github.com/hds-sandbox/GWAS_course.git /tmp/gwas_course \
+&& mv /tmp/gwas_course/Software/* . && rm -rf /tmp/gwas_course \
 && sudo chmod 755 -R /work/Software/ && cd .. \
 && export PATH=$PATH:/home/ucloud/.pixi/bin && eval "$(pixi completion --shell bash)" \
 && ln -s /opt/pixi/envs/Course_Env/.pixi && ln -s /opt/pixi/envs/Course_Env/pixi.toml \
-&& echo "export PATH=\$PATH:/work/Software/boltLMM" >> /home/ucloud/.bashrc \
+&& echo "export PATH=\$PATH:/work/Software/boltLMM:/work/Software/" >> /home/ucloud/.bashrc \
 && ln -s /work/Software/boltLMM/bolt /opt/pixi/envs/Course_Env/.pixi/envs/default/bin/bolt \
+&& ln -s /work/Software/ldak /opt/pixi/envs/Course_Env/.pixi/envs/default/bin/ldak \
+&& ln -s /work/Software/PRSice /opt/pixi/envs/Course_Env/.pixi/envs/default/bin/PRSice \
 && echo 'eval "$(pixi completion --shell bash)"' >> /home/ucloud/.bashrc 
 
     
