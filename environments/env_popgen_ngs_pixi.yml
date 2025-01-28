@@ -36,6 +36,7 @@ dependencies:
   - conda-forge::ghostscript
   - conda-forge::gnuplot
   - conda-forge::bash_kernel
+  - bioconda::plink
   - bioconda::plink2
   - bioconda::nextflow
   - gwforg::gwf
