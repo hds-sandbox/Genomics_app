@@ -79,9 +79,7 @@ We recommend using [GenomeDK Desktop](https://desktop.genome.au.dk/) - a browser
  singularity pull genomicsapp.sif docker://hdssandbox/genomicsapp 
  ```
 3. Copy the command below and modify it accordingly.
-   ```{.bash}
-   srun --mem=32g --cores=2 --time=0:10:0 --account=<YOURPROJECT> --pty singularity exec --writable-tmpfs --fakeroot --bind /tmp:/tmp --bind $(pwd):$(pwd) --pwd $(pwd) --bind /etc/ssl/certs:/etc/ssl/certs --bind /etc/pki/ca-trust:/etc/pki/ca-trust /path/to/genomicsapp.sif start-app -c "Intro_to_GWAS -p $UID"
-   ```
+   ```srun --mem=32g --cores=2 --time=0:10:0 --account=<YOURPROJECT> --pty singularity exec --writable-tmpfs --fakeroot --bind /tmp:/tmp --bind $(pwd):$(pwd) --pwd $(pwd) --bind /etc/ssl/certs:/etc/ssl/certs --bind /etc/pki/ca-trust:/etc/pki/ca-trust /path/to/genomicsapp.sif start-app -c "Intro_to_GWAS -p $UID"```
 4. The command above is used to run the image as an interactive session on the HPC, specifying the time, cores, and memory allocation.
      - Adjust the settings to your needs. Check [GenomeDK guidelines](https://genome.au.dk/docs/interacting-with-the-queue/) if in doubt. 
      - Choose the directories that should be bound for inclusion inside the container.
