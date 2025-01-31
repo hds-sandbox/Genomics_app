@@ -1,10 +1,3 @@
-<style>
-  code {
-    white-space : pre-wrap !important;
-    word-break: break-word;
-  }
-</style>
-
 # Genomics sandbox
 
 In this app, you will find material for the genomics sandbox of the **[Health Data Science sandbox](https://hds-sandbox.github.io)**. It contains course tutorials, datasets, and tools you can use for research or self-learning. Each course item of this sandbox is based on Jupyterlab. Jupyterlab is a web-based integrated development environment for Jupyter notebooks, code, and data.
