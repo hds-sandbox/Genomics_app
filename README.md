@@ -1,3 +1,8 @@
+---
+AsciiDoc:
+  wrap: true
+---
+
 # Genomics sandbox
 
 In this app, you will find material for the genomics sandbox of the **[Health Data Science sandbox](https://hds-sandbox.github.io)**. It contains course tutorials, datasets, and tools you can use for research or self-learning. Each course item of this sandbox is based on Jupyterlab. Jupyterlab is a web-based integrated development environment for Jupyter notebooks, code, and data.
@@ -79,11 +84,13 @@ We recommend using [GenomeDK Desktop](https://desktop.genome.au.dk/) - a browser
  singularity pull genomicsapp.sif docker://hdssandbox/genomicsapp 
  ```
 3. Copy the command below and modify it accordingly.
-   <code> srun --mem=32g --cores=2 --time=0:10:0 --account=<YOURPROJECT> --pty singularity exec --writable-tmpfs --fakeroot --bind /tmp:/tmp --bind $(pwd):$(pwd) --pwd $(pwd) --bind /etc/ssl/certs:/etc/ssl/certs --bind /etc/pki/ca-trust:/etc/pki/ca-trust /path/to/genomicsapp.sif start-app -c "Intro_to_GWAS -p $UID"<code>
-4. The command above is used to run the image as an interactive session on the HPC, specifying the time, cores, and memory allocation.
+   ```{.bash}
+   srun --mem=32g --cores=2 --time=0:10:0 --account=<YOURPROJECT> --pty singularity exec --writable-tmpfs --fakeroot --bind /tmp:/tmp --bind $(pwd):$(pwd) --pwd $(pwd) --bind /etc/ssl/certs:/etc/ssl/certs --bind /etc/pki/ca-trust:/etc/pki/ca-trust /path/to/genomicsapp.sif start-app -c "Intro_to_GWAS -p $UID"
+   ```
+5. The command above is used to run the image as an interactive session on the HPC, specifying the time, cores, and memory allocation.
      - Adjust the settings to your needs. Check [GenomeDK guidelines](https://genome.au.dk/docs/interacting-with-the-queue/) if in doubt. 
      - Choose the directories that should be bound for inclusion inside the container.
-5. Click on "Show clipboard" at the top-right of the Desktop, and paste the modified command there.
+6. Click on "Show clipboard" at the top-right of the Desktop, and paste the modified command there.
 5. In the terminal, paste the command and ensure you are in the desired working directory (e.g., `intro_to_GWAS` in one of your projects as we are binding the `pwd`).
 6. Open the link displayed in the terminal, which includes the node name and port number (e.g., cn-1040:8787 or s21n31:8787).
 
