@@ -107,7 +107,7 @@ singularity pull genomicsapp.sif docker://hdssandbox/genomicsapp
 You can customize the port by using the `-p` option to select a different port for running the application. Additionally, if you already have data and notebooks locally, you can bind them to the container, avoiding the need for any new downloads. The command to run the container with these options looks like this:
 
 - `--rm`: This option removes the container after running, preventing your disk from filling up with cached images.
-- Add a `-v` /path/to/data to bind your local data/notebooks to the container
+- Add `-v` /path/to/data to bind your local data/notebooks to the container
    
 ```{.bash}
 docker run -rm -p $PORT:$PORT genomicsapp.sif start-app -c "Intro_to_GWAS" -p $PORT
