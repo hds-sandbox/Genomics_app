@@ -70,14 +70,11 @@ COPY --chown=$USERID:$GROUPID Software ./Software
 
 ENV PATH=$PATH:/opt/pixi/envs/Course_Env/.pixi/envs/default/bin
 
-# hadolint igonre=SC2016 
+# hadolint ignore=SC2016 
 RUN wget --progress=dot:giga "https://zenodo.org/records/14712777/files/bolt_2.4.1.zip?download=1" -O boltLMM.zip \
  && unzip -qq boltLMM.zip -d boltLMM \
  && rm boltLMM.zip \
  && chmod 755 boltLMM/bolt \ 
-# && git clone --depth 1  https://github.com/hds-sandbox/GWAS_course.git /tmp/gwas_course \
-# && mv /tmp/gwas_course/Software/* . \
-# && rm -rf /tmp/gwas_course \
  && chmod 755 -R ./Software \
  && ln -s /opt/pixi/envs/Course_Env/pixi.toml /opt/pixi/envs/Course_Env/.pixi/envs/default/pixi.toml \
  && ln -s "$PWD/boltLMM/bolt" /opt/pixi/envs/Course_Env/.pixi/envs/default/bin/bolt \
@@ -87,7 +84,7 @@ RUN wget --progress=dot:giga "https://zenodo.org/records/14712777/files/bolt_2.4
 
 ## Set startup script in the PATH
 ## entrypoint script
-COPY --chown=$USERID:$GROUPID scripts/start-app.sh /usr/bin/start-app
+COPY --chown=$USERID:$GROUPID scripts/start-app /usr/bin/start-app
 
 RUN chmod 755 /usr/bin/start-app
 
