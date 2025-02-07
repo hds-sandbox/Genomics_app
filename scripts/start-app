@@ -2,29 +2,60 @@
 
 PORT_USER=8787
 COURSE_DIR=/tmp/course
+PIXI_ENV=/opt/pixi/envs/Course_Env/.pixi/envs/default
+export PIXI_ENV
+JUPYTER_KERNELS=$PIXI_ENV/share/jupyter/kernels
+CURR_DIR=/work
 
-## Options for the Transcriptomics Sandbox app
-while getopts c:f:p: option; do
+##########################
+##### Script options
+##########################
+
+while getopts :c:p: option; do
     case "${option}" in
-    c) COURSE=${OPTARG} ;;
-    p) PORT_USER=${OPTARG} ;; # not needed on ucloud!!!
-    \?)                          ## Invalid option
+    c) COURSE=${OPTARG} ;;    # Course to start
+    p) PORT_USER=${OPTARG} ;; # needed only for general use out of ucloud
+    \?)                       # Invalid option
         printf "Error: invalid option.\n\n"
         exit
         ;;
     esac
 done
 
+#########################
+##### General setup
+#########################
 
+# Setup resource usage in topbar for jupyterlab
+sed -i 's/"default": false/"default": true/g' "$PIXI_ENV/share/jupyter/labextensions/@jupyter-server/resource-usage/schemas/@jupyter-server/resource-usage/topbar-item.json"
+
+#Initialize Pixi
+cd $CURR_DIR || exit
+
+#Course kernels setup for executables
+echo "-----> Mapping course kernels on JupyterLab"
+# shellcheck disable=SC2016,SC2044
+for KERNEL in $(find $JUPYTER_KERNELS -name kernel.json)
+do
+    echo "----------> Mapping $KERNEL"
+    jq '. + {"env": {"PATH":"$PIXI_ENV/bin/:$PIXI_ENV/libexec:$PATH"}}' "$KERNEL" > tmp.$$.json && mv tmp.$$.json "$KERNEL"
+done
 
 printf "\n======================  "
 printf "\n== Selecting Module == \n"
 printf "======================  \n\n"
 
+cd $CURR_DIR || exit
+
+#########################
+##### intro to NGS course
+#########################
 if [ "${COURSE}" == "Intro_to_NGS" ]
 then
+
     echo "-----> Chosen course: Introduction to NGS data"
 
+    #Checking for course material
     if [ ! -d "Data" ]
     then
         echo "----------> downloading data"
@@ -32,47 +63,58 @@ then
         wget --show-progress -t 10 https://zenodo.org/record/7670370/files/Data.tar.gz?download=1 -O /tmp/Data.tar.gz
         echo "----------> extracting data"
         tar -zxf /tmp/Data.tar.gz -C Data > /dev/null 2>&1
-        rm -f /tmp/Data.tar.gz 
+        rm -f /tmp/Data.tar.gz
     else
         echo "----------> data already present"
     fi
 
-    echo "----------> Installing course kernels on JupyterLab"
-    /opt/miniconda/envs/Course_Env/bin/python -m ipykernel install --user --name="ngs_python" --display-name "NGS (Python)"
-    /opt/miniconda/envs/Course_Env/bin/R -e "IRkernel::installspec(user=TRUE, name = 'ngs_r', displayname = 'NGS (R)')"
+    if [[ ! -d "Notebooks" || ! -d "Scripts" ]]
+    then
+    	git clone --depth 1 https://github.com/hds-sandbox/NGS_summer_course_Aarhus.git "$COURSE_DIR"
+    fi
 
-    
-    git clone --depth 1 https://github.com/hds-sandbox/NGS_summer_course_Aarhus.git $COURSE_DIR
-    # kernel configurations with updated $PATH included
-    cp /home/ucloud/course/Environments/kernel_py.json ~/.local/share/jupyter/kernels/ngs_python/kernel.json && \
-    cp /home/ucloud/course/Environments/kernel_R.json ~/.local/share/jupyter/kernels/ngs_r/kernel.json
-
-    
-    mv $COURSE_DIR/Scripts 
+    if [ ! -d "Scripts" ]
+    then
+        echo "----------> copying course notebooks"
+        mv $COURSE_DIR/Scripts .
+    else
+        echo "----------> scripts already present"
+    fi
 
     if [ ! -d "Notebooks" ]
     then
         echo "----------> copying course notebooks"
-        mv "${COURSE_DIR}"/Notebooks .
+        mv $COURSE_DIR/Notebooks .
     else
         echo "----------> notebooks already present"
     fi
-
-    #bashrc file for conda
-    echo 'eval "$(/opt/miniconda/bin/conda shell.bash hook)"'>>/home/ucloud/.bashrc   
-    echo 'conda activate /opt/miniconda/envs/Course_Env'>>/home/ucloud/.bashrc
 
     printf  "\n==================  "
     printf  "\n Start JupyterLab  \n"
     printf  "==================  \n\n"
 
-    SHELL=/bin/bash jupyter-lab --port=$PORT_USER --ip=0.0.0.0 --NotebookApp.token='' --no-browser
+    cd "$PIXI_ENV" || exit
+    SHELL="$PIXI_ENV/bin/bash" pixi run jupyter-lab --allow-root \
+                                                    --port="$PORT_USER" \
+                                                    --ip=0.0.0.0  \
+                                                    --ServerApp.token='' \
+                                                    --ResourceUseDisplay.track_cpu_percent=True \
+                                                    --ResourceUseDisplay.track_disk_usage=True \
+                                                    --ResourceUseDisplay.enable_prometheus_metrics=False \
+                                                    --ContentsManager.allow_hidden=True \
+                                                    --ServerApp.root_dir="$CURR_DIR"
 
 fi
 
+##########################
+##### Popgen Aarhus Course
+##########################
+
 if [ "${COURSE}" == "Intro_to_PopGen" ]
 then
+
     echo "-----> Chosen course: Intro to population Genetics"
+    #Checking for course material
 
     if [ ! -d "Data" ]
     then
@@ -85,51 +127,51 @@ then
         echo "----------> data already present"
     fi
 
-    echo "----------> Installing course kernels on JupyterLab"
-    /opt/miniconda/envs/Course_Env/bin/python -m ipykernel install --user --name="args_dashboard" --display-name "args dashboard"
-    /opt/miniconda/envs/Course_Env/bin/R -e "IRkernel::installspec(user=TRUE, name = 'popgen_course', displayname = 'popgen course')"
-    /opt/miniconda/envs/Course_Env/bin/python -m bash_kernel.install
-
-    git clone --branch ucloud --depth 1  https://github.com/hds-sandbox/PopulationGenomicsCourse.git $COURSE_DIR
-
     if [ ! -d "Notebooks" ]
     then
+        git clone --branch ucloud --depth 1  https://github.com/hds-sandbox/PopulationGenomicsCourse.git "$COURSE_DIR"
         echo "----------> copying course notebooks"
         mv $COURSE_DIR/Notebooks .
     else
         echo "----------> notebooks already present"
     fi
 
-    # kernel configurations with updated $PATH included
-    cp $COURSE_DIR/uCloud/Configurations/kernelBash.json ~/.local/share/jupyter/kernels/bash/kernel.json
-
-    #bashrc file for conda
-    echo 'eval "$(/opt/miniconda/bin/conda shell.bash hook)"'>>/home/ucloud/.bashrc   
-    echo 'conda activate /opt/miniconda/envs/Course_Env'>>/home/ucloud/.bashrc
-
     printf  "\n==================  "
     printf  "\n Start JupyterLab  \n"
     printf  "==================  \n\n"
 
-    SHELL=/bin/bash jupyter-lab --port=$PORT_USER --ip=0.0.0.0 --NotebookApp.token='' --no-browser
+    cd "$PIXI_ENV" || exit
+    SHELL="$PIXI_ENV/bin/bash" pixi run jupyter-lab --allow-root \
+                                                    --port="$PORT_USER" \
+                                                    --ip=0.0.0.0  \
+                                                    --ServerApp.token='' \
+                                                    --ResourceUseDisplay.track_cpu_percent=True \
+                                                    --ResourceUseDisplay.track_disk_usage=True \
+                                                    --ResourceUseDisplay.enable_prometheus_metrics=False \
+                                                    --ContentsManager.allow_hidden=True \
+                                                    --ServerApp.root_dir="$CURR_DIR"
 
 fi
 
+##########################
+##### Intro to GWAS course
+##########################
+
 if [ "${COURSE}" == "Intro_to_GWAS" ]
 then
+
     echo "-----> Chosen course: Intro to GWAS"
 
-    git clone --depth 1  https://github.com/hds-sandbox/GWAS_course.git $COURSE_DIR
-    mv $COURSE_DIR/Software .
+    #Checking for course material
+    if [[ ! -d "Notebooks" || ! -d "Data" ]]
+    then
+    	git clone --depth 1  https://github.com/hds-sandbox/GWAS_course.git "$COURSE_DIR"
+    fi
 
-    echo "----------> Installing course kernels on JupyterLab"
-    /opt/miniconda/envs/Course_Env/bin/python -m bash_kernel.install
-    /opt/miniconda/envs/Course_Env/Course_Env/bin/R -e "IRkernel::installspec(user=TRUE, name = 'rgwas', displayname = 'GWAS (R)')"
-    
     if [ ! -d "Data" ]
     then
         echo "----------> copying data"
-        mv COURSE_DIR/Data .
+        mv $COURSE_DIR/Data .
     else
         echo "----------> data already present"
     fi
@@ -142,25 +184,19 @@ then
         echo "----------> notebooks already present"
     fi
 
-    # kernel configurations with updated $PATH included
-    cp /home/ucloud/course/uCloud/kernelBash.json ~/.local/share/jupyter/kernels/bash/kernel.json
-    
-    #bashrc file for conda
-    echo 'eval "$(/opt/miniconda/bin/conda shell.bash hook)"'>>/home/ucloud/.bashrc   
-    echo 'conda activate /opt/miniconda/envs/Course_Env'>>/home/ucloud/.bashrc
-
     printf  "\n==================  "
     printf  "\n Start JupyterLab  \n"
     printf  "==================  \n\n"
 
-    SHELL=/bin/bash jupyter-lab --port=$PORT_USER --ip=0.0.0.0 --NotebookApp.token='' --no-browser
+    cd "$PIXI_ENV" || exit
+    SHELL="$PIXI_ENV/bin/bash" pixi run jupyter-lab --allow-root \
+                                                    --port="$PORT_USER" \
+                                                    --ip=0.0.0.0  \
+                                                    --ServerApp.token='' \
+                                                    --ResourceUseDisplay.track_cpu_percent=True \
+                                                    --ResourceUseDisplay.track_disk_usage=True \
+                                                    --ResourceUseDisplay.enable_prometheus_metrics=False \
+                                                    --ContentsManager.allow_hidden=True \
+                                                    --ServerApp.root_dir="$CURR_DIR"
 
-fi
-
-if [ "${COURSE}" == "IGV" ]
-then
-    echo "-----> Chosen tool: Interactive Genomic Browser"
-    export IGV_DATA_PATH="/work"
-    cd /usr/igv-webapp || exit
-    npx http-server --port "${PORT_USER}" -a 0.0.0.0 dist
 fi
