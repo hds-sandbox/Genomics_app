@@ -1,0 +1,59 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    env: 
+        # Define environment variables here
+        BASE_IMAGE: dreg.cloud.sdu.dk/ucloud-apps/rstudio:4.4.2
+        APP_NAME: genomicsapp
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Remove unnecessary files to create room for DOcker image
+        run: |
+          ##removes up to 14GB according to https://github.com/actions/runner-images/issues/2840#issuecomment-790492173
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+          sudo rm -rf /opt/ghc
+          sudo rm -rf "/usr/local/share/boost"
+
+        ##DOCKER_TAG secret is latest, change if you need for example a test version. 
+        ##Remember to set back to latest after that. Preferably, avoid changing that,
+        ##and instead push to your own account for testing         
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: ${{ secrets.DOCKER_ORG }}/${{ env.APP_NAME }}:${{ secrets.DOCKER_TAG }}
+          build-args: |
+            BASE_IMAGE=${{ env.BASE_IMAGE }}
+            GITHUB_PAT=${{ secrets.PAT_GITHUB }}
+            DOCKER_BUILDKIT=1
+          ##The registry cache backend is the inline cache++. This backend pushes cache artifacts as a separate image than the Docker image to a dedicated location in the registry.
+          ##Contrary to the inline cache, the registry cache supports caching of intermediate layers in a multi-stage Docker build when configured with mode=max . This increases the chances of cache hits on subsequent builds.
+          ##It also supports a host of options to control compression type, levels, and naming of the cache image etc. At the cost of some additional complexity to set up, this is the best-in-class caching solution for Docker builds.
+          ##From https://www.blacksmith.sh/blog/cache-is-king-a-guide-for-docker-layer-caching-in-github-actions
+          cache-from: type=registry,ref=hdssandbox/${{ env.APP_NAME }}:buildcache
+          cache-to: type=registry,ref=hdssandbox/${{ env.APP_NAME }}:buildcache,mode=max

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/work/.pixi/envs/default/bin/bash
 
 PORT_USER=8787
 COURSE_DIR=/tmp/course
@@ -13,6 +13,9 @@ CURR_DIR=/work
 
 while getopts :c:p: option; do
     case "${option}" in
+    c) COURSE=${OPTARG} ;;    # Course to start
+    p) PORT_USER=${OPTARG} ;; # needed only for general use out of ucloud
+    \?)                       # Invalid option
     c) COURSE=${OPTARG} ;;    # Course to start
     p) PORT_USER=${OPTARG} ;; # needed only for general use out of ucloud
     \?)                       # Invalid option
@@ -53,8 +56,10 @@ cd $CURR_DIR || exit
 if [ "${COURSE}" == "Intro_to_NGS" ]
 then
 
+
     echo "-----> Chosen course: Introduction to NGS data"
 
+    #Checking for course material
     #Checking for course material
     if [ ! -d "Data" ]
     then
@@ -85,6 +90,7 @@ then
     then
         echo "----------> copying course notebooks"
         mv $COURSE_DIR/Notebooks .
+        mv $COURSE_DIR/Notebooks .
     else
         echo "----------> notebooks already present"
     fi
@@ -113,7 +119,9 @@ fi
 if [ "${COURSE}" == "Intro_to_PopGen" ]
 then
 
+
     echo "-----> Chosen course: Intro to population Genetics"
+    #Checking for course material
     #Checking for course material
 
     if [ ! -d "Data" ]
@@ -160,6 +168,7 @@ fi
 if [ "${COURSE}" == "Intro_to_GWAS" ]
 then
 
+
     echo "-----> Chosen course: Intro to GWAS"
 
     #Checking for course material
@@ -171,6 +180,7 @@ then
     if [ ! -d "Data" ]
     then
         echo "----------> copying data"
+        mv $COURSE_DIR/Data .
         mv $COURSE_DIR/Data .
     else
         echo "----------> data already present"

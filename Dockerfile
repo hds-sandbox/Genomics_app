@@ -41,6 +41,7 @@ USER $USERID
 
 ## Environments files and scripts
 COPY --chown=$USERID:$GROUPID environments /tmp/environments
+COPY --chown=$USERID:$GROUPID ./Software ./Software
 
 WORKDIR /opt/pixi
 

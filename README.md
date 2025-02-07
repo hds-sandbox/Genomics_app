@@ -1,10 +1,10 @@
 # Genomics sandbox
 
-In this app you will find material for the genomics sandbox of the **[Health Data Science sandbox](https://hds-sandbox.github.io)**. This contains courses you can learn from, datasets and tools you can work with for your own research/learning purposes. Each course item of this sandbox is based on jupyterlab. Jupyterlab is a web-based integrated development environment for Jupyter notebooks, code, and data. Usually, each item includes a dedicated webpage with additional informations, guides, and material.
+In this app, you will find material for the genomics sandbox of the **[Health Data Science sandbox](https://hds-sandbox.github.io)**. It contains course tutorials, datasets, and tools you can use for research or self-learning. Each course item of this sandbox is based on Jupyterlab. Jupyterlab is a web-based integrated development environment for Jupyter notebooks, code, and data.
 
 ## Available material
 
-Items are periodically added to this app and can be chosen from the menu. Each item can be for example a course, a setup to work with specific softwares, a research example and comes with all necessary packages installed, eventual notebooks with computer code and explanations, and a dedicated webpage with additional material (notes, slides, recordings, ...).
+Items are periodically added to this app and can be chosen from the menu. Each item can be a course, a setup to work with specific software, or a research workflow example. They come with all necessary packages installed, notebooks with computer code and explanations, and a dedicated webpage with additional material (notes, slides, recordings, ...).
 
 ### Courses
 
@@ -16,7 +16,6 @@ Items are periodically added to this app and can be chosen from the menu. Each i
 | **Introduction to Population genomics**  | <div style="text-align: justify"> A course introducing and applying bioinformatic tools to perform a whole population genomics analysis </div> | [Webpage](https://hds-sandbox.github.io/PopulationGenomicsCourse/) | bash, R, python |
 | **Introduction to GWAS**  | <div style="text-align: justify"> An introductory course in Genome-Wide Association Studies </div> | [Webpage](https://hds-sandbox.github.io/GWAS_course/) | bash, R |
 
-
 ### Tools
 
  The available tools are
@@ -25,35 +24,35 @@ Items are periodically added to this app and can be chosen from the menu. Each i
 | :-----------: | ----------- | ----------- | ----------- |
 | **IGV - Integrative Genomics viewer**  | <div style="text-align: justify"> A High-performance, easy-to-use, interactive tool for the visual exploration of genomic data. It supports flexible integration of all the common types of genomic data and metadata, investigator-generated or publicly available. </div> | [Official Manual](https://igvteam.github.io/igv-webapp/) | Interactive User Interface |
 
-## Choosing an item 
+## Download the course data and notebooks
 
-To choose an item, open the App `Genomics Sandbox` on uCloud. Here, choose some settings and a course or tool from the drop down menu (red circle in the figure below). Remember to select the project where you have storage space: `My Workspace` is your personal workspace with ~50GB of storage (green circle in the figure below), but you might have obtained a project with more storage and compute credit, or you might have been invited into a project (for example for a course).
+Each course is open-source, and the data is freely available. Here is the link to all repositories, where you can download the datasets and the notebooks.
+
+| Course name      | Data Repository | Notebooks repo | 
+| :-----------: | ----------- | ----------------| 
+| **Introduction to NGS data analysis**  | [Link](https://zenodo.org/record/7670370) | [Repo](https://github.com/hds-sandbox/NGS_summer_course_Aarhus) |
+| **Introduction to Population genomics**  | [Link](https://zenodo.org/record/7670839) |[Repo](https://github.com/hds-sandbox/PopulationGenomicsCourse) |
+| **Introduction to GWAS**  | [Link](https://github.com/hds-sandbox/GWAS_course) | [Repo](https://github.com/hds-sandbox/GWAS_course)|
+
+# Usage on UCloud 
+## Choosing an item on UCloud
+
+To choose an item, open the App `Genomics Sandbox` on UCloud. You can decide on the settings and a course or tool from the drop-down menu (red circle in the figure below). Remember to select the project where you have storage space: `My Workspace` is your workspace with ~50GB of storage (green circle in the figure below), but you might have obtained a project with more storage and compute credit, or you might have been invited into a project (for example, in one of our course).
 
 ![](./docs_img/app_setup.png)
 
-Finally, you can start the app by clicking on `Submit`. The App needs to download data and packages, and depending on the course/tool, this can take time. See below **how to reuse the data and avoid long waiting time** (you need however to download data the first time you run the app).
+Finally, you can start the app by clicking on `Submit`. The App needs to download data and packages which can take some time. See below **how to reuse the data and avoid long waiting time** (you need however to download data the first time you run the app).
 
 ### Available options
 
-Additionally, you can use data and notebooks running in a previous session of the App. **The app will otherwise download the data and the notebooks anew every time**.
+Additionally, you can use data and notebooks running in a previous session of the App. **The app will otherwise download the data and the notebooks a new one every time**.
 
-To choose the data from previous sessions, click on `Add folders` and on the browsing bar appearing in the gray option box (red circle in the figure below). Then find your latest session of the sandbox (inside the folder `Jobs/Genomics Sandbox`, found under your personal user folder as seen in the example below) and choose the folder you need. Accepted folders are `Data` and `Notebooks` (such as the two folders chosen in the figure below).
+To choose the data from previous sessions, click on `Add folders` on the browsing bar appearing in the gray option box (red circle in the figure below). Then, find your latest session of the sandbox (inside the folder `Jobs/Genomics Sandbox` under your personal user folder as shown below) and choose the folder you need. In this example, accepted folders are `Data` and `Notebooks`.
 
 ![](./docs_img/add_folder.png)
 
-## Download the course data and notebooks
-
-Each course is open-source and the data freely available. Here you have the link to all repositories for downloading the datasets.
-
-| Course name      | Data Repository |
-| :-----------: | ----------- | 
-| **Introduction to NGS data analysis**  | [Link](https://zenodo.org/record/7670370) |
-| **Introduction to Population genomics**  | [Link](https://zenodo.org/record/7670839) |
-| **Introduction to GWAS**  | [Link](https://github.com/hds-sandbox/GWAS_course) |
-
 ## Download the data you generated
 
-You can easily download files you generated by right-clicking on selected files in the browser of jupyterlab, and by choosing download (see figure below).
+You can easily download files you generated by right-clicking on selected files in the browser of Jupyterlab, and by choosing download (see figure below).
 
 ![](./docs_img/download.png)
-

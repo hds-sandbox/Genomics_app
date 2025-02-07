@@ -5,6 +5,7 @@ channels:
   - anaconda
   - plotly
   - grst
+  - gwforg
 dependencies:
   - bioconda::regenie
   - conda-forge::jupyterlab
@@ -17,6 +18,7 @@ dependencies:
   - conda-forge::r-base>=4.0.0
   - conda-forge::r-ggplot2
   - conda-forge::r-dplyr
+  - conda-forge::r-tidyverse
   - conda-forge::r-irkernel
   - conda-forge::certifi
   - conda-forge::ipykernel
@@ -26,6 +28,8 @@ dependencies:
   - conda-forge::r-vcfr
   - bioconda::vcftools
   - conda-forge::cxx-compiler
+  - bioconda::snakemake
+  - conda-forge::nodejs
   - conda-forge::r-tidyr
   - bioconda::bioconductor-snprelate
   - bioconda::psmc
@@ -33,6 +37,9 @@ dependencies:
   - conda-forge::gnuplot
   - conda-forge::bash_kernel
   - bioconda::plink
+  - bioconda::plink2
+  - bioconda::nextflow
+  - gwforg::gwf
   - conda-forge::r-data.table
   - conda-forge::r-gridextra
   - conda-forge::r-cowplot
@@ -48,8 +55,11 @@ dependencies:
   - bioconda::admixture
   - conda-forge::conda-pack
   - bioconda::bioconductor-deseq2
+  - bioconda::bioconductor-edger
   - conda-forge::gsl
   - conda-forge::scanpy
+  - bioconda::harmonypy
+  - bioconda::bbknn
   - conda-forge::python-igraph
   - conda-forge::leidenalg
   - conda-forge::python-annoy
@@ -78,29 +88,13 @@ dependencies:
   - conda-forge::pycparser
   - conda-forge::pyopenssl
   - conda-forge::pip
-  - pip:
-      - scvelo==0.3.3
-      - rpy2==3.5.13
-      - pydeseq2
-      - batchglm #==0.7.4
-      - bbknn==1.5.1
-      - robustbase==0.2.8
-      - scrublet==0.2.3
-      - sparse #==0.13.0
-      - requests #==2.27.1
-      - six #==1.16.0
-      - tqdm #==4.64.0
-      - urllib3 #==1.26.9
-      - wheel #==0.37.1
-      - nbconvert #### jupyter plugins
-      - nteract_on_jupyter
-      - jupyter-resource-usage
-      - jupyterlab-topbar-text
-      - autopep8
-      - yapf
-      - isort 
-      - black
-      - jupyterlab-code-formatter
-      - jupyterlab-git
-      - jupyterlab-lsp
-      - jupyter_bokeh
+  - icu
+  - libgomp
+  - libblas
+  - liblapack
+  - readline
+  - rpy2
+  - conda-forge::jupyter-lsp
+  - conda-forge::jupyter-lsp-r
+  - conda-forge::jupyter-lsp-python
+  - conda-forge::jupyter-lsp-latex
