@@ -22,3 +22,4 @@ jupyterquiz
 jupyterlab-quarto
 nbconvert[webpdf]
 doubletdetection
+eir-dl

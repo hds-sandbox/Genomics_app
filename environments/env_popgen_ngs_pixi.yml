@@ -6,12 +6,13 @@ channels:
   - plotly
   - grst
   - gwforg
+  - genomedk
 dependencies:
   - bioconda::regenie
   - conda-forge::jupyterlab
   - conda-forge::gcc_linux-64
   - bioconda::bwa
-  - bioconda::bcftools
+  - bioconda::bcftools[version='1.16']
   - bioconda::samtools[version='1.6']
   - conda-forge::ca-certificates
   - conda-forge::openssl
@@ -98,3 +99,4 @@ dependencies:
   - conda-forge::jupyter-lsp-r
   - conda-forge::jupyter-lsp-python
   - conda-forge::jupyter-lsp-latex
+  - ldak6

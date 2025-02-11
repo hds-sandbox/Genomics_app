@@ -70,7 +70,12 @@ then
 
     if [[ ! -d "Notebooks" || ! -d "Scripts" ]]
     then
-    	git clone --depth 1 https://github.com/hds-sandbox/NGS_summer_course_Aarhus.git "$COURSE_DIR"
+    	git clone --no-checkout --filter=blob:none --depth 1 https://github.com/hds-sandbox/Intro-NGS-AU_course.git "$COURSE_DIR"
+        cd "$COURSE_DIR" || exit
+        git sparse-checkout init --cone
+        git sparse-checkout set Notebooks Scripts
+        git checkout
+        cd $CURR_DIR || exit
     fi
 
     if [ ! -d "Scripts" ]
@@ -129,7 +134,12 @@ then
 
     if [ ! -d "Notebooks" ]
     then
-        git clone --branch ucloud --depth 1  https://github.com/hds-sandbox/PopulationGenomicsCourse.git "$COURSE_DIR"
+        git clone --branch ucloud --no-checkout --filter=blob:none --depth 1  https://github.com/hds-sandbox/PopulationGenomicsAU_course.git "$COURSE_DIR"
+                cd "$COURSE_DIR" || exit
+        git sparse-checkout init --cone
+        git sparse-checkout set Notebooks
+        git checkout
+        cd $CURR_DIR || exit
         echo "----------> copying course notebooks"
         mv $COURSE_DIR/Notebooks .
     else
@@ -163,15 +173,18 @@ then
     echo "-----> Chosen course: Intro to GWAS"
 
     #Checking for course material
-    if [[ ! -d "Notebooks" || ! -d "Data" ]]
-    then
-    	git clone --depth 1  https://github.com/hds-sandbox/GWAS_course.git "$COURSE_DIR"
-    fi
 
     if [ ! -d "Data" ]
     then
         echo "----------> copying data"
+        git clone --no-checkout --filter=blob:none  --depth 1  https://github.com/hds-sandbox/GWAS_course.git "$COURSE_DIR"
+        cd "$COURSE_DIR" || exit
+        git sparse-checkout init --cone
+        git sparse-checkout set Data
+        git checkout
+        cd $CURR_DIR || exit
         mv $COURSE_DIR/Data .
+        rm -rf $COURSE_DIR
     else
         echo "----------> data already present"
     fi
@@ -179,7 +192,14 @@ then
     if [ ! -d "Notebooks" ]
     then
         echo "----------> copying notebooks"
+                git clone --no-checkout --filter=blob:none  --depth 1  https://github.com/hds-sandbox/GWAS_course.git "$COURSE_DIR"
+        cd "$COURSE_DIR" || exit
+        git sparse-checkout init --cone
+        git sparse-checkout set Notebooks
+        git checkout
+        cd $CURR_DIR || exit
         mv $COURSE_DIR/Notebooks .
+        rm -rf $COURSE_DIR
     else
         echo "----------> notebooks already present"
     fi
