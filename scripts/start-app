@@ -192,7 +192,7 @@ then
     if [ ! -d "Notebooks" ]
     then
         echo "----------> copying notebooks"
-                git clone --no-checkout --filter=blob:none  --depth 1  https://github.com/hds-sandbox/GWAS_course.git "$COURSE_DIR"
+        git clone --no-checkout --filter=blob:none  --depth 1  https://github.com/hds-sandbox/GWAS_course.git "$COURSE_DIR"
         cd "$COURSE_DIR" || exit
         git sparse-checkout init --cone
         git sparse-checkout set Notebooks
