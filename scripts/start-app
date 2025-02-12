@@ -2,9 +2,11 @@
 
 PORT_USER=8787
 COURSE_DIR=/tmp/course
-PIXI_ENV=/opt/pixi/envs/Course_Env/.pixi/envs/default
+PIXI_ENV_HOME=/opt/pixi/envs/Course_Env/
+PIXI_ENV=$PIXI_ENV_HOME/.pixi/envs/default/
+export PIXI_ENV_HOME
 export PIXI_ENV
-JUPYTER_KERNELS=$PIXI_ENV/share/jupyter/kernels
+JUPYTER_KERNELS=$PIXI_ENV/share/jupyter/kernels/
 CURR_DIR=/work
 
 ##########################
@@ -98,7 +100,7 @@ then
     printf  "\n Start JupyterLab  \n"
     printf  "==================  \n\n"
 
-    cd "$PIXI_ENV" || exit
+    cd "$PIXI_ENV_HOME" || exit
     SHELL="$PIXI_ENV/bin/bash" pixi run jupyter-lab --allow-root \
                                                     --port="$PORT_USER" \
                                                     --ip=0.0.0.0  \
@@ -150,7 +152,7 @@ then
     printf  "\n Start JupyterLab  \n"
     printf  "==================  \n\n"
 
-    cd "$PIXI_ENV" || exit
+    cd "$PIXI_ENV_HOME" || exit
     SHELL="$PIXI_ENV/bin/bash" pixi run jupyter-lab --allow-root \
                                                     --port="$PORT_USER" \
                                                     --ip=0.0.0.0  \
@@ -208,7 +210,7 @@ then
     printf  "\n Start JupyterLab  \n"
     printf  "==================  \n\n"
 
-    cd "$PIXI_ENV" || exit
+    cd "$PIXI_ENV_HOME" || exit
     SHELL="$PIXI_ENV/bin/bash" pixi run jupyter-lab --allow-root \
                                                     --port="$PORT_USER" \
                                                     --ip=0.0.0.0  \

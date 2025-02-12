@@ -76,7 +76,6 @@ RUN wget --progress=dot:giga "https://zenodo.org/records/14712777/files/bolt_2.4
  && rm boltLMM.zip \
  && chmod 755 boltLMM/bolt \ 
  && chmod 755 -R ./Software \
- && ln -s /opt/pixi/envs/Course_Env/pixi.toml /opt/pixi/envs/Course_Env/.pixi/envs/default/pixi.toml \
  && ln -s "$PWD/boltLMM/bolt" /opt/pixi/envs/Course_Env/.pixi/envs/default/bin/bolt \
  && ln -s "$PWD/Software/ldak" /opt/pixi/envs/Course_Env/.pixi/envs/default/bin/ldak \
  && ln -s "$PWD/Software/PRSice" /opt/pixi/envs/Course_Env/.pixi/envs/default/bin/PRSice \
