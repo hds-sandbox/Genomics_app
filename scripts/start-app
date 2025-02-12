@@ -80,7 +80,7 @@ then
 
     if [ ! -d "Scripts" ]
     then
-        echo "----------> copying course notebooks"
+        echo "----------> copying course scripts"
         mv $COURSE_DIR/Scripts .
     else
         echo "----------> scripts already present"
