@@ -12,7 +12,7 @@ Items are periodically added to this app and can be chosen from the menu. Each i
 
 | Course name      | Description |  Links    | Programming language |
 | :-----------: | ----------- | ----------- | ----------- |
-| **Introduction to NGS data analysis**  | <div style="text-align: justify"> A one-week course to introduce NGS data, from data alignment to bioinformatics analysis </div> | [Webpage](https://hds-sandbox.github.io/NGS_summer_course_Aarhus/) | Python, R, bash |
+| **Introduction to NGS data analysis**  | <div style="text-align: justify"> A one-week course to introduce NGS data, from data alignment to bioinformatics analysis </div> | [Webpage](https://hds-sandbox.github.io/Intro-NGS-AU_course/) | Python, R, bash |
 | **Introduction to Population genomics**  | <div style="text-align: justify"> A course introducing and applying bioinformatic tools to perform a whole population genomics analysis </div> | [Webpage](https://hds-sandbox.github.io/PopulationGenomicsCourse/) | bash, R, python |
 | **Introduction to GWAS**  | <div style="text-align: justify"> An introductory course in Genome-Wide Association Studies </div> | [Webpage](https://hds-sandbox.github.io/GWAS_course/) | bash, R |
 
@@ -22,7 +22,7 @@ Each course is open-source, and the data is freely available. Here is the link t
 
 | Course name      | Data Repository | Notebooks repo | 
 | :-----------: | ----------- | ----------------| 
-| **Introduction to NGS data analysis**  | [Link](https://zenodo.org/record/7670370) | [Repo](https://github.com/hds-sandbox/NGS_summer_course_Aarhus) |
+| **Introduction to NGS data analysis**  | [Link](https://zenodo.org/record/7670370) | [Repo](https://github.com/hds-sandbox/Intro-NGS-AU_course) |
 | **Introduction to Population genomics**  | [Link](https://zenodo.org/record/7670839) |[Repo](https://github.com/hds-sandbox/PopulationGenomicsCourse) |
 | **Introduction to GWAS**  | [Link](https://github.com/hds-sandbox/GWAS_course) | [Repo](https://github.com/hds-sandbox/GWAS_course)|
 
@@ -31,9 +31,9 @@ Each course is open-source, and the data is freely available. Here is the link t
 
 To choose an item, open the App `Genomics Sandbox` on UCloud. You can find it under the Application menu of the toolbar on the left. Choose `Courses` from the list, thenm select `Health data science sandbox`, `Transcriptomics Sandbox`. 
 
-![](./docs_img/app_setup.png)
+![](./docs_img/appStoreGenomics.gif)
 
-You can decide on the settings and a module from the drop-down menu (red circle in the figure below). Remember to select the project where you have storage space: `My Workspace` is your workspace with ~50GB of storage (green circle in the figure below), but you might have obtained a project with more storage and compute credit, or you might have been invited into a project (for example, in one of our course).
+You can decide on the settings and a module from the drop-down menu (red circle in the figure below). Remember to select the project where you have storage space: `My Workspace` is your workspace with ~100GB of free storage (green circle in the figure below) and some free computing credit, but you might have obtained a project with more storage and compute credit, or you might have been invited into a project (for example, in one of our courses, or you requested a project yourself).
 
 ![](./docs_img/app_setup.png)
 
