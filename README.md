@@ -29,19 +29,25 @@ Each course is open-source, and the data is freely available. Here is the link t
 # Usage on UCloud 
 ## Choosing an item on UCloud
 
-To choose an item, open the App `Genomics Sandbox` on UCloud. You can decide on the settings and a course or tool from the drop-down menu (red circle in the figure below). Remember to select the project where you have storage space: `My Workspace` is your workspace with ~50GB of storage (green circle in the figure below), but you might have obtained a project with more storage and compute credit, or you might have been invited into a project (for example, in one of our course).
+To choose an item, open the App `Genomics Sandbox` on UCloud. You can find it under the Application menu of the toolbar on the left. Choose `Courses` from the list, thenm select `Health data science sandbox`, `Transcriptomics Sandbox`. 
 
 ![](./docs_img/app_setup.png)
 
-Finally, you can start the app by clicking on `Submit`. The App needs to download data and packages which can take some time. See below **how to reuse the data and avoid long waiting time** (you need however to download data the first time you run the app).
+You can decide on the settings and a module from the drop-down menu (red circle in the figure below). Remember to select the project where you have storage space: `My Workspace` is your workspace with ~50GB of storage (green circle in the figure below), but you might have obtained a project with more storage and compute credit, or you might have been invited into a project (for example, in one of our course).
+
+![](./docs_img/app_setup.png)
+
+Finally, you can start the app by clicking on `Submit`. The App needs to download data and packages which can take some time. See below **how to reuse the data and avoid download time** (you need however to download data the first time you run the app).
 
 ### Available options
 
-Additionally, you can use data and notebooks running in a previous session of the App. **The app will otherwise download the data and the notebooks a new one every time**.
+Additionally, you can use data and notebooks running in a previous session of the App. **The app will otherwise download the data and the notebooks anew every time**.
 
 To choose the data from previous sessions, click on `Add folders` on the browsing bar appearing in the gray option box (red circle in the figure below). Then, find your latest session of the sandbox (inside the folder `Jobs/Genomics Sandbox` under your personal user folder as shown below) and choose the folder you need. In this example, accepted folders are `Data` and `Notebooks`.
 
 ![](./docs_img/add_folder.png)
+
+More detailed instructions are found in the webpage of each module.
 
 ## Download the data you generated
 
