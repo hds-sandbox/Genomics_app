@@ -16,14 +16,6 @@ Items are periodically added to this app and can be chosen from the menu. Each i
 | **Introduction to Population genomics**  | <div style="text-align: justify"> A course introducing and applying bioinformatic tools to perform a whole population genomics analysis </div> | [Webpage](https://hds-sandbox.github.io/PopulationGenomicsCourse/) | bash, R, python |
 | **Introduction to GWAS**  | <div style="text-align: justify"> An introductory course in Genome-Wide Association Studies </div> | [Webpage](https://hds-sandbox.github.io/GWAS_course/) | bash, R |
 
-### Tools
-
- The available tools are
-
-| Tool name      | Description |  Links    | Programming language |
-| :-----------: | ----------- | ----------- | ----------- |
-| **IGV - Integrative Genomics viewer**  | <div style="text-align: justify"> A High-performance, easy-to-use, interactive tool for the visual exploration of genomic data. It supports flexible integration of all the common types of genomic data and metadata, investigator-generated or publicly available. </div> | [Official Manual](https://igvteam.github.io/igv-webapp/) | Interactive User Interface |
-
 ## Download the course data and notebooks
 
 Each course is open-source, and the data is freely available. Here is the link to all repositories, where you can download the datasets and the notebooks.
