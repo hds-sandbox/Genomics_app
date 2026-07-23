@@ -11,7 +11,7 @@ jobs:
 
     env: 
         # Define environment variables here
-        BASE_IMAGE: dreg.cloud.sdu.dk/ucloud-apps/rstudio:4.4.2
+        BASE_IMAGE: dreg.cloud.sdu.dk/ucloud-apps/rstudio:4.5.1
         APP_NAME: genomicsapp
 
     steps:
@@ -30,7 +30,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Remove unnecessary files to create room for DOcker image
+      - name: Remove unnecessary files to create room for Docker image
         run: |
           ##removes up to 14GB according to https://github.com/actions/runner-images/issues/2840#issuecomment-790492173
           sudo rm -rf /usr/share/dotnet
@@ -50,7 +50,6 @@ jobs:
           build-args: |
             BASE_IMAGE=${{ env.BASE_IMAGE }}
             GITHUB_PAT=${{ secrets.PAT_GITHUB }}
-            DOCKER_BUILDKIT=1
           ##The registry cache backend is the inline cache++. This backend pushes cache artifacts as a separate image than the Docker image to a dedicated location in the registry.
           ##Contrary to the inline cache, the registry cache supports caching of intermediate layers in a multi-stage Docker build when configured with mode=max . This increases the chances of cache hits on subsequent builds.
           ##It also supports a host of options to control compression type, levels, and naming of the cache image etc. At the cost of some additional complexity to set up, this is the best-in-class caching solution for Docker builds.

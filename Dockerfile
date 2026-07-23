@@ -1,4 +1,4 @@
-ARG BASE_IMAGE=dreg.cloud.sdu.dk/ucloud-apps/rstudio:4.4.2
+ARG BASE_IMAGE=dreg.cloud.sdu.dk/ucloud-apps/rstudio:4.5.1
 
 FROM $BASE_IMAGE
 
@@ -32,7 +32,7 @@ RUN apt-get update \
 
 WORKDIR /sbin
 
-ARG TINI_=${TINI_:-"latest"}
+ARG TINI_=latest
 RUN if [[ "${TINI_}" = "latest" ]]; then export TINI_=$(curl -s https://api.github.com/repos/krallin/tini/releases/latest | jq -r '.tag_name'); fi \
  && wget -q "https://github.com/krallin/tini/releases/download/${TINI_}/tini" \
  && chmod +x tini
@@ -55,7 +55,7 @@ WORKDIR /opt/pixi/envs/Course_Env
 
 RUN pixi init --import /tmp/environments/env_popgen_ngs_pixi.yml \
  && pixi install \
- && pixi run /opt/pixi/envs/Course_Env/.pixi/envs/default/bin/pip install -r /tmp/environments/requirements_pixi.txt \
+ && pixi run /opt/pixi/envs/Course_Env/.pixi/envs/default/bin/pip install --no-cache-dir -r /tmp/environments/requirements_pixi.txt \
  && pixi run R -e "install.packages(\"rehh\", repos=\"http://cran.r-project.org\", lib=\"/opt/pixi/envs/Course_Env/.pixi/envs/default/lib/R/library\")"
 
 WORKDIR /home/$USER
