@@ -3,7 +3,7 @@ ARG BASE_IMAGE=dreg.cloud.sdu.dk/ucloud-apps/rstudio:4.4.2
 FROM $BASE_IMAGE
 
 LABEL software="Genomics Sandbox" \
-      author="Samuele Soraggi <samuele@birc.au.dk>, Emiliano Molinaro <molinaro@imada.sdu.dk>" \
+      author="Samuele Soraggi <samuele@birc.au.dk>, Emiliano Molinaro <molinaro@imada.sdu.dk>, Alba Refoyo <alba.martinez@sund.ku.dk>" \
       version="2025.02" \
       license="MIT" \
       description="Courses, datasets and software tools for genomics analysis"
@@ -77,7 +77,7 @@ RUN wget --progress=dot:giga "https://zenodo.org/records/14712777/files/bolt_2.4
  && chmod 755 boltLMM/bolt \ 
  && chmod 755 -R ./Software \
  && ln -s "$PWD/boltLMM/bolt" /opt/pixi/envs/Course_Env/.pixi/envs/default/bin/bolt \
- && ln -s "$PWD/Software/ldak" /opt/pixi/envs/Course_Env/.pixi/envs/default/bin/ldak \
+ && ln -s "$PWD/Software/ldak6.3.linux" /opt/pixi/envs/Course_Env/.pixi/envs/default/bin/ldak \
  && ln -s "$PWD/Software/PRSice" /opt/pixi/envs/Course_Env/.pixi/envs/default/bin/PRSice \
  && echo 'eval "$(pixi completion --shell bash)"' >> "/home/${USER}/.bashrc"
 

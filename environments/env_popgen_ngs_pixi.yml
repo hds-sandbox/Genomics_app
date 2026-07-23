@@ -1,9 +1,6 @@
 channels:
   - conda-forge
   - bioconda
-  - r
-  - anaconda
-  - plotly
   - grst
   - gwforg
   - genomedk
@@ -99,4 +96,5 @@ dependencies:
   - conda-forge::jupyter-lsp-r
   - conda-forge::jupyter-lsp-python
   - conda-forge::jupyter-lsp-latex
-  - ldak6
+  - conda-forge::r-bigstatsr
+  - conda-forge::r-bigsnpr
