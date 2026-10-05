@@ -20,7 +20,6 @@ ENV PATH=$PIXI_ENV/bin:/home/$USER/bin:/home/$USER/.pixi/bin:$PATH
 ENV JUPYTER_ENV_FILE="https://raw.githubusercontent.com/hds-sandbox/common-files_development/refs/heads/main/jupyterlab_and_plugins.yaml"
 
 
-COPY --chown=$USERID:$GROUPID environments /tmp/environments
 COPY --chown=$USERID:$GROUPID scripts/merge-repolist-envs.sh /tmp/merge-repolist-envs.sh
 
 ## Set shell
