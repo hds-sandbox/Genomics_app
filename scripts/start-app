@@ -2,8 +2,8 @@
 
 PORT_USER=8787
 COURSE_DIR=/tmp/course
-PIXI_ENV_HOME=/opt/pixi/envs/Course_Env/
-PIXI_ENV=$PIXI_ENV_HOME/.pixi/envs/default/
+PIXI_ENV_HOME=/opt
+PIXI_ENV=$PIXI_ENV_HOME/.pixi/envs/course-env
 export PIXI_ENV_HOME
 export PIXI_ENV
 JUPYTER_KERNELS=$PIXI_ENV/share/jupyter/kernels/
@@ -101,7 +101,7 @@ then
     printf  "==================  \n\n"
 
     cd "$PIXI_ENV_HOME" || exit
-    SHELL="$PIXI_ENV/bin/bash" pixi run jupyter-lab --allow-root \
+    SHELL="$PIXI_ENV/bin/bash" pixi run --environment course-env jupyter-lab --allow-root \
                                                     --port="$PORT_USER" \
                                                     --ip=0.0.0.0  \
                                                     --IdentityProvider.token='' \
@@ -153,7 +153,7 @@ then
     printf  "==================  \n\n"
 
     cd "$PIXI_ENV_HOME" || exit
-    SHELL="$PIXI_ENV/bin/bash" pixi run jupyter-lab --allow-root \
+    SHELL="$PIXI_ENV/bin/bash" pixi run --environment course-env jupyter-lab --allow-root \
                                                     --port="$PORT_USER" \
                                                     --ip=0.0.0.0  \
                                                     --IdentityProvider.token='' \
@@ -211,7 +211,7 @@ then
     printf  "==================  \n\n"
 
     cd "$PIXI_ENV_HOME" || exit
-    SHELL="$PIXI_ENV/bin/bash" pixi run jupyter-lab --allow-root \
+    SHELL="$PIXI_ENV/bin/bash" pixi run --environment course-env jupyter-lab --allow-root \
                                                     --port="$PORT_USER" \
                                                     --ip=0.0.0.0  \
                                                     --IdentityProvider.token='' \
