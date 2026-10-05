@@ -20,6 +20,7 @@ ENV PATH=$PIXI_ENV/bin:/home/$USER/bin:/home/$USER/.pixi/bin:$PATH
 ENV JUPYTER_ENV_FILE="https://raw.githubusercontent.com/hds-sandbox/common-files_development/refs/heads/main/jupyterlab_and_plugins.yaml"
 
 
+COPY --chown=$USERID:$GROUPID environments/repolist.txt /tmp/environments/repolist.txt
 COPY --chown=$USERID:$GROUPID scripts/merge-repolist-envs.sh /tmp/merge-repolist-envs.sh
 
 ## Set shell
@@ -69,8 +70,6 @@ RUN curl -fsSL https://pixi.sh/install.sh | bash \
  && cat ./environment_merged.yml
 
 RUN "$HOME/.pixi/bin/pixi" install --environment course-env \
- && "$HOME/.pixi/bin/pixi" run --environment course-env \
-    pip install --no-cache-dir -r /tmp/environments/requirements_pixi.txt \
  && "$HOME/.pixi/bin/pixi" run --environment course-env \
     R -e "install.packages(\"rehh\", repos=\"http://cran.r-project.org\", lib=Sys.getenv(\"R_LIBS_USER\"))" \
  && cat >> "/home/${USER}/.bashrc" <<'EOF'

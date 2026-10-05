@@ -1,0 +1,2 @@
+https://raw.githubusercontent.com/hds-sandbox/Intro-NGS-AU_course/main/Environments/environment.yml
+https://raw.githubusercontent.com/hds-sandbox/GWAS_course/main/environment.yml
