@@ -32,6 +32,7 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN apt-get update \
  && apt-get install --no-install-recommends -y \
     build-essential \
+    less \
     pandoc \
     libicu-dev \
     libcurl4-openssl-dev \
