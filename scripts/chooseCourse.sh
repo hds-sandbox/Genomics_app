@@ -11,7 +11,7 @@
 source ~/.bashrc
 
 # List of course names for the dropdown menu
-COURSES=("Intro_to_NGS" "Intro_to_GWAS" "Intro_to_Popgen")
+COURSES=("Intro_to_NGS" "Intro_to_GWAS" "Intro_to_PopGen")
 
 # Convert the courses array into a |-separated string for zenity
 COURSE_OPTIONS=$(printf "|%s" "${COURSES[@]}")
