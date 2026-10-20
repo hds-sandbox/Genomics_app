@@ -1,3 +1,4 @@
 https://raw.githubusercontent.com/hds-sandbox/Intro-NGS-AU_course/main/Environments/environment.yml
 https://raw.githubusercontent.com/hds-sandbox/GWAS_course/main/environment.yml
 https://raw.githubusercontent.com/hds-sandbox/PopulationGenomicsAU_course/refs/heads/ucloud/environment.yml
+https://raw.githubusercontent.com/hds-sandbox/post-gwas-analysis_course/main/Environments/environment.yml

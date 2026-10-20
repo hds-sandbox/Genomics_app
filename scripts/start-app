@@ -222,3 +222,46 @@ then
                                                     --ServerApp.root_dir="$CURR_DIR"
 
 fi
+
+##########################
+##### Post GWAS course
+##########################
+
+if [ "${COURSE}" == "Post_GWAS" ]
+then
+
+    echo "-----> Chosen course: Post GWAS tools and analysis"
+
+    #Checking for course material
+
+    if [ ! -d "Notebooks" ]
+    then
+        echo "----------> copying notebooks"
+        git clone --no-checkout --filter=blob:none  --depth 1  https://github.com/hds-sandbox/post-gwas-analysis_course.git "$COURSE_DIR"
+        cd "$COURSE_DIR" || exit
+        git sparse-checkout init --cone
+        git sparse-checkout set Notebooks
+        git checkout
+        cd $CURR_DIR || exit
+        mv $COURSE_DIR/Notebooks .
+        rm -rf $COURSE_DIR
+    else
+        echo "----------> notebooks already present"
+    fi
+
+    printf  "\n==================  "
+    printf  "\n Start JupyterLab  \n"
+    printf  "==================  \n\n"
+
+    cd "$PIXI_ENV_HOME" || exit
+    SHELL="$PIXI_ENV/bin/bash" pixi run --environment course-env jupyter-lab --allow-root \
+                                                    --port="$PORT_USER" \
+                                                    --ip=0.0.0.0  \
+                                                    --IdentityProvider.token='' \
+                                                    --ResourceUseDisplay.track_cpu_percent=True \
+                                                    --ResourceUseDisplay.track_disk_usage=True \
+                                                    --ResourceUseDisplay.enable_prometheus_metrics=False \
+                                                    --ContentsManager.allow_hidden=True \
+                                                    --ServerApp.root_dir="$CURR_DIR"
+
+fi
