@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -o pipefail # a failed download must not be hidden by tar
+
 PORT_USER=8787
 COURSE_DIR=/tmp/course
 PIXI_ENV_HOME=/opt
@@ -60,12 +62,10 @@ then
     #Checking for course material
     if [ ! -d "Data" ]
     then
-        echo "----------> downloading data"
+        echo "----------> downloading and extracting data"
         mkdir -p Data
-        wget --show-progress -t 10 https://zenodo.org/record/7670370/files/Data.tar.gz?download=1 -O /tmp/Data.tar.gz
-        echo "----------> extracting data"
-        tar -zxf /tmp/Data.tar.gz -C Data > /dev/null 2>&1
-        rm -f /tmp/Data.tar.gz
+        wget --show-progress -t 10 https://zenodo.org/record/7670370/files/Data.tar.gz?download=1 -O - | tar -zxf - -C Data > /dev/null 2>&1 \
+            || { echo "----------> data download failed, removing partial Data folder"; rm -rf Data; exit 1; }
     else
         echo "----------> data already present"
     fi
@@ -125,11 +125,9 @@ then
 
     if [ ! -d "Data" ]
     then
-        echo "----------> downloading data"
-        wget --show-progress -t 10 https://zenodo.org/record/7670839/files/Data.tar.gz?download=1 -O /tmp/Data.tar.gz
-        echo "----------> extracting data"
-        tar -zxf /tmp/Data.tar.gz -C . > /dev/null 2>&1
-        rm -f /tmp/Data.tar.gz
+        echo "----------> downloading and extracting data"
+        wget --show-progress -t 10 https://zenodo.org/record/7670839/files/Data.tar.gz?download=1 -O - | tar -zxf - -C . > /dev/null 2>&1 \
+            || { echo "----------> data download failed, removing partial Data folder"; rm -rf Data; exit 1; }
     else
         echo "----------> data already present"
     fi
@@ -233,6 +231,16 @@ then
     echo "-----> Chosen course: Post GWAS tools and analysis"
 
     #Checking for course material
+
+    if [ ! -d "Data" ]
+    then
+        echo "----------> downloading and extracting data"
+        mkdir -p Data
+        wget --show-progress -t 10 https://zenodo.org/records/23500045/files/Data.tar.gz?download=1 -O - | tar -zxf - -C Data > /dev/null 2>&1 \
+            || { echo "----------> data download failed, removing partial Data folder"; rm -rf Data; exit 1; }
+    else
+        echo "----------> data already present"
+    fi
 
     if [ ! -d "Notebooks" ]
     then
