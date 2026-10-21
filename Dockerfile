@@ -16,6 +16,8 @@ ENV PIXI_ENV=${PIXI_PROJECT}/.pixi/envs/course-env
 ENV R_HOME=$PIXI_ENV/lib/R
 ENV R_LIBS_USER=$R_HOME/library
 ENV SHELL=/bin/bash
+ENV NUMBA_DISABLE_CACHE=1
+ENV NUMBA_CACHE_DIR=/tmp
 ENV PATH=$PIXI_ENV/bin:/home/$USER/bin:/home/$USER/.pixi/bin:$PATH
 ENV JUPYTER_ENV_FILE="https://raw.githubusercontent.com/hds-sandbox/common-files_development/refs/heads/main/jupyterlab_and_plugins.yaml"
 
