@@ -113,7 +113,7 @@ RUN wget --progress=dot:giga "https://zenodo.org/records/14712777/files/bolt_2.4
 # Post-GWAS tools: finemap and python scripts (ldsc, pops, FLAMES) run with the pixi python
 RUN git clone --depth 1 https://github.com/CBIIT/ldsc.git ldsc \
  && git clone --depth 1 https://github.com/SamueleSoraggi/FLAMES.git FLAMES \
- && git clone --depth 1 https://github.com/FinucaneLab/pops.git pops \
+ && git clone --depth 1 https://github.com/hds-sandbox/pops.git pops \
  && mkdir -p finemap \
  && curl -fsSL -o finemap.tgz http://www.christianbenner.com/finemap_v1.4.2_x86_64.tgz \
  && tar -xzf finemap.tgz -C finemap \
