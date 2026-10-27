@@ -13,8 +13,10 @@ Items are periodically added to this app and can be chosen from the menu. Each i
 | Course name      | Description |  Links    | Programming language |
 | :-----------: | ----------- | ----------- | ----------- |
 | **Introduction to NGS data analysis**  | <div style="text-align: justify"> A one-week course to introduce NGS data, from data alignment to bioinformatics analysis </div> | [Webpage](https://hds-sandbox.github.io/Intro-NGS-AU_course/) | Python, R, bash |
-| **Introduction to Population genomics**  | <div style="text-align: justify"> A course introducing and applying bioinformatic tools to perform a whole population genomics analysis </div> | [Webpage](https://hds-sandbox.github.io/PopulationGenomicsCourse/) | bash, R, python |
+| **Introduction to Population genomics**  | <div style="text-align: justify"> A course introducing and applying bioinformatic tools to perform a whole population genomics analysis </div> | [Webpage](https://hds-sandbox.github.io/PopulationGenomicsCourse/) | bash, R, Python |
 | **Introduction to GWAS**  | <div style="text-align: justify"> An introductory course in Genome-Wide Association Studies </div> | [Webpage](https://hds-sandbox.github.io/GWAS_course/) | bash, R |
+| **Post-GWAS tools and analysis**  | <div style="text-align: justify"> An introductory course in Post-GWAS tools and analysis </div> | [Webpage](https://hds-sandbox.github.io/post-gwas-analysis_course/) | bash, R |
+
 
 ## Download the course data and notebooks
 
