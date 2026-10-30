@@ -6,7 +6,7 @@ ENV LC_ALL=C.UTF-8
 
 LABEL software="Genomics Sandbox" \
     author="Samuele Soraggi <samuele@birc.au.dk>, Alba Refoyo <alba.martinez@sund.ku.dk>" \
-    version="2025.02" \
+    version="2026.11" \
     license="MIT" \
     description="Courses, datasets and software tools for genomics analysis"
 
