@@ -15,10 +15,11 @@ CURR_DIR=/work
 ##### Script options
 ##########################
 
-while getopts :c:p: option; do
+while getopts :c:p:d option; do
     case "${option}" in
     c) COURSE=${OPTARG} ;;    # Course to start
     p) PORT_USER=${OPTARG} ;; # needed only for general use out of ucloud
+    d) DOWNLOAD_ONLY=1 ;;     # download course material without starting jupyterlab
     \?)                       # Invalid option
         printf "Error: invalid option.\n\n"
         exit
@@ -30,20 +31,24 @@ done
 ##### General setup
 #########################
 
-# Setup resource usage in topbar for jupyterlab
-sed -i 's/"default": false/"default": true/g' "$PIXI_ENV/share/jupyter/labextensions/@jupyter-server/resource-usage/schemas/@jupyter-server/resource-usage/topbar-item.json"
-
 #Initialize Pixi
 cd $CURR_DIR || exit
 
-#Course kernels setup for executables
-echo "-----> Mapping course kernels on JupyterLab"
-# shellcheck disable=SC2016,SC2044
-for KERNEL in $(find $JUPYTER_KERNELS -name kernel.json)
-do
-    echo "----------> Mapping $KERNEL"
-    jq '. + {"env": {"PATH":"$PIXI_ENV/bin/:$PIXI_ENV/libexec:$PATH"}}' "$KERNEL" > tmp.$$.json && mv tmp.$$.json "$KERNEL"
-done
+# jupyterlab setup, not needed when only downloading
+if [ -z "$DOWNLOAD_ONLY" ]
+then
+    # Setup resource usage in topbar for jupyterlab
+    sed -i 's/"default": false/"default": true/g' "$PIXI_ENV/share/jupyter/labextensions/@jupyter-server/resource-usage/schemas/@jupyter-server/resource-usage/topbar-item.json"
+
+    #Course kernels setup for executables
+    echo "-----> Mapping course kernels on JupyterLab"
+    # shellcheck disable=SC2016,SC2044
+    for KERNEL in $(find $JUPYTER_KERNELS -name kernel.json)
+    do
+        echo "----------> Mapping $KERNEL"
+        jq '. + {"env": {"PATH":"$PIXI_ENV/bin/:$PIXI_ENV/libexec:$PATH"}}' "$KERNEL" > tmp.$$.json && mv tmp.$$.json "$KERNEL"
+    done
+fi
 
 printf "\n======================  "
 printf "\n== Selecting Module == \n"
@@ -96,6 +101,12 @@ then
         echo "----------> notebooks already present"
     fi
 
+    if [ -n "$DOWNLOAD_ONLY" ]
+    then
+        echo "-----> Download complete, JupyterLab not started (-d)"
+        exit 0
+    fi
+
     printf  "\n==================  "
     printf  "\n Start JupyterLab  \n"
     printf  "==================  \n\n"
@@ -144,6 +155,12 @@ then
         mv $COURSE_DIR/Notebooks .
     else
         echo "----------> notebooks already present"
+    fi
+
+    if [ -n "$DOWNLOAD_ONLY" ]
+    then
+        echo "-----> Download complete, JupyterLab not started (-d)"
+        exit 0
     fi
 
     printf  "\n==================  "
@@ -204,6 +221,12 @@ then
         echo "----------> notebooks already present"
     fi
 
+    if [ -n "$DOWNLOAD_ONLY" ]
+    then
+        echo "-----> Download complete, JupyterLab not started (-d)"
+        exit 0
+    fi
+
     printf  "\n==================  "
     printf  "\n Start JupyterLab  \n"
     printf  "==================  \n\n"
@@ -255,6 +278,12 @@ then
         rm -rf $COURSE_DIR
     else
         echo "----------> notebooks already present"
+    fi
+
+    if [ -n "$DOWNLOAD_ONLY" ]
+    then
+        echo "-----> Download complete, JupyterLab not started (-d)"
+        exit 0
     fi
 
     printf  "\n==================  "
